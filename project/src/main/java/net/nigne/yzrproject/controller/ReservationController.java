@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import net.nigne.yzrproject.domain.MovieVO;
+import net.nigne.yzrproject.domain.TheaterVO;
 import net.nigne.yzrproject.service.MovieService;
+import net.nigne.yzrproject.service.TheaterService;
 
 /** 
 * @Package  : net.nigne.yzrproject.controller 
@@ -20,7 +22,10 @@ import net.nigne.yzrproject.service.MovieService;
 @Controller
 public class ReservationController {
 	@Autowired
-	private MovieService service;
+	private MovieService movieService;
+	
+	@Autowired
+	private TheaterService theaterService;
 
 	/** 
 	* @Method Name : home  
@@ -34,9 +39,19 @@ public class ReservationController {
 	public String home(Locale locale, Model model) throws Exception {
 		
 
-		List<MovieVO> list=service.getList();
+		List<MovieVO> movieList = movieService.getList();
+		List<TheaterVO> theaterList = theaterService.getList();
+		List<TheaterVO> localList = theaterService.getLocal();
+		List<TheaterVO> theaterNum = theaterService.getLocalTheaterNum();
 		
-		model.addAttribute("list", list);
+		int theaternum = theaterNum.size();
+		
+		System.out.println(theaternum);
+		
+		model.addAttribute("movieList", movieList);
+		model.addAttribute("theaterList", theaterList);
+		model.addAttribute("localList", localList);
+		model.addAttribute("theaterNum", theaternum);
 		
 		return "main";
 	}
@@ -44,9 +59,9 @@ public class ReservationController {
 	public String reservation(Locale locale, Model model) throws Exception {
 		
 
-		List<MovieVO> list=service.getList();
+		List<MovieVO> movieList = movieService.getList();
 		
-		model.addAttribute("list", list);
+		model.addAttribute("movieList", movieList);
 		
 		return "reservation";
 	}

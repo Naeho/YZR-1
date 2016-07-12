@@ -25,6 +25,7 @@
 		padding-right:7px;
 		padding-left:7px;
 		text-align: center;
+		cursor:pointer;
 	}
 	#movie_menu1{
 		border: 2px solid #000;
@@ -48,9 +49,11 @@
 		border-bottom:2px solid #999;
 		text-align: center;
 		width: 80px;
+		cursor:pointer;
 	}
 	#movie_second_menu1{
 		border-bottom: 2px solid #000;
+		cursor:pointer;
 	}
 	.theater_menu{
 		float:left;
@@ -62,25 +65,29 @@
 		border: 2px solid #000;
 		border-bottom: 0px solid #000;
 		width: 70px;
+		cursor:pointer;
 	}
 	#theater_menu2{
 		border: 1px solid #999;
 		border-bottom: 2px solid #000;
 		width: 100px;
+		cursor:pointer;
 	}
 	#theater_menu3{
 		border: 1px solid #999;
 		border-bottom: 2px solid #000;
 		width: 70px;
+		cursor:pointer;
 	}
 	.theater_state{
 		margin-top:15px;
 		
 		float:left;
 		text-align: right;
+		width:150px;
 		
 	}
-	ul.theater_state>div{
+	ul.theater_state>li>div{
 		background-color: rgba(166,166,166,0.2);
 		margin-bottom: 3px;
 		padding: 8px;
@@ -141,7 +148,7 @@
 				</ul>
 				<br>
 				<ul style="margin-top:15px; float:none">
-					<c:forEach items="${ list }" var="movie_list">
+					<c:forEach items="${ movieList }" var="movie_list">
 						${ movie_list.getTitle() }<br>
 					</c:forEach>
 				</ul>
@@ -166,20 +173,19 @@
 				<br>
 				<div style="height: 300px">
 					<ul class="theater_state">
-						<div><li style="float: none; display: inline-block;">서울</li></div>
-						<div><li style="float: none; display: inline-block;">경기</li></div>
-						<div><li style="float: none; display: inline-block;">인천</li></div>
-						<div><li style="float: none; display: inline-block;">강원</li></div>
-						<div><li style="float: none; display: inline-block;">대전/충청</li></div>
-						<div><li style="float: none; display: inline-block;">광주/전라</li></div>
-						<div><li style="float: none; display: inline-block;">대구/울산/부산</li></div>
-						<div><li style="float: none; display: inline-block;">경상</li></div>
-						<div><li style="float: none; display: inline-block;">제주</li></div>
+						<c:forEach items="${ localList }" var="local_list">
+							<li style="float: none; display: inline-block;"><div>${ local_list }</div></li>
+						</c:forEach>
+						
+							<li style="float: none; display: inline-block;"><div>${ theaterNum }</div></li>
+						
+
+						
 					</ul>
 					<ul class="theater_city">
-						<div><li style="float: none; display: inline-block;">상세지역</li></div>
-						<div><li style="float: none; display: inline-block;">상세지역</li></div>
-						<div><li style="float: none; display: inline-block;">상세지역</li></div>
+						<c:forEach items="${ theaterList }" var="theater_list">
+							<div><li style="float: none; display: inline-block;">${ theater_list.theater_name }</li></div>
+						</c:forEach>
 					</ul>
 				</div>
 			</td>
@@ -321,6 +327,12 @@
 				$("#theater_menu2").css("border-bottom", "2px solid #000");
 				$("#theater_menu3").css("border", "2px solid #000");
 				$("#theater_menu3").css("border-bottom", "0px solid #000");
+			});
+		});
+		
+		$(document).ready(function() {
+			$(".state_value").click(function(){
+				alert($(this).val());
 			});
 		});
 		

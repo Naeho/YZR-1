@@ -26,6 +26,7 @@ public class MovieVO {
 	int moviegoers_cnt;
 	@Column(name="reservation_rate")
 	String reservation_rate;
+	
 	public String getMovie_id() {
 		return movie_id;
 	}
