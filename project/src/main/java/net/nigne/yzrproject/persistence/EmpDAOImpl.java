@@ -19,8 +19,8 @@ public class EmpDAOImpl implements EmpDAO {
 	@Override
 	public List<EmpVO> getList() {
 		// TODO Auto-generated method stub
-		CriteriaBuilder cb=entityManager.getCriteriaBuilder();
-		CriteriaQuery<EmpVO> cq=cb.createQuery(EmpVO.class);
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<EmpVO> cq = cb.createQuery(EmpVO.class);
 		Root<EmpVO> root = cq.from(EmpVO.class);
 		cq.select(root);
 		TypedQuery<EmpVO> tq = entityManager.createQuery(cq);

@@ -24,7 +24,7 @@ public class TheaterServiceImpl implements TheaterService {
 	}
 
 	@Override
-	public List<TheaterVO> getLocalTheaterNum() {
+	public List<Long> getLocalTheaterNum() {
 		// TODO Auto-generated method stub
 		return dao.getLocalTheaterNum();
 	}

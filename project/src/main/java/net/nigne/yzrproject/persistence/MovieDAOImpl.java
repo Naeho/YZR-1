@@ -11,7 +11,6 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
-import net.nigne.yzrproject.domain.EmpVO;
 import net.nigne.yzrproject.domain.MovieVO;
 
 @Repository
@@ -23,11 +22,13 @@ public class MovieDAOImpl implements MovieDAO {
 	@Override
 	public List<MovieVO> getList() {
 		// TODO Auto-generated method stub
-		CriteriaBuilder cb=entityManager.getCriteriaBuilder();
-		CriteriaQuery<MovieVO> cq=cb.createQuery(MovieVO.class);
-		Root<MovieVO> root = cq.from(MovieVO.class);
-		cq.select(root);
-		TypedQuery<MovieVO> tq = entityManager.createQuery(cq);
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MovieVO> mainQuery = cb.createQuery(MovieVO.class);
+		Root<MovieVO> mainQueryroot = mainQuery.from(MovieVO.class);
+		
+		mainQuery.select(mainQueryroot);
+		
+		TypedQuery<MovieVO> tq = entityManager.createQuery(mainQuery);
 		List<MovieVO> list = tq.getResultList();
 		
 		return list;

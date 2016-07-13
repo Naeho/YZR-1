@@ -8,9 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import net.nigne.yzrproject.domain.MovieVO;
+import net.nigne.yzrproject.domain.PlexVO;
 import net.nigne.yzrproject.domain.TheaterVO;
+import net.nigne.yzrproject.domain.TimetableVO;
 import net.nigne.yzrproject.service.MovieService;
+import net.nigne.yzrproject.service.PlexService;
 import net.nigne.yzrproject.service.TheaterService;
+import net.nigne.yzrproject.service.TimetableService;
 
 /** 
 * @Package  : net.nigne.yzrproject.controller 
@@ -26,6 +30,12 @@ public class ReservationController {
 	
 	@Autowired
 	private TheaterService theaterService;
+	
+	@Autowired
+	private PlexService plexrService;
+	
+	@Autowired
+	private TimetableService timetableService;
 
 	/** 
 	* @Method Name : home  
@@ -38,20 +48,27 @@ public class ReservationController {
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) throws Exception {
 		
+		int timetableNum = 0;
 
 		List<MovieVO> movieList = movieService.getList();
 		List<TheaterVO> theaterList = theaterService.getList();
 		List<TheaterVO> localList = theaterService.getLocal();
-		List<TheaterVO> theaterNum = theaterService.getLocalTheaterNum();
+		List<Long> theaterNum = theaterService.getLocalTheaterNum();
+		List<PlexVO> plexList = plexrService.getList();
+		List<TimetableVO> timetableList = timetableService.getList();
+		System.out.println(timetableList.size());
 		
-		int theaternum = theaterNum.size();
-		
-		System.out.println(theaternum);
+		while(timetableList.size() > timetableNum){
+			System.out.println(timetableNum + ":" + timetableList.get(timetableNum).getStart_time());
+			timetableNum++;
+		}
+
 		
 		model.addAttribute("movieList", movieList);
 		model.addAttribute("theaterList", theaterList);
 		model.addAttribute("localList", localList);
-		model.addAttribute("theaterNum", theaternum);
+		model.addAttribute("theaterNum", theaterNum);
+		model.addAttribute("plexList", plexList);
 		
 		return "main";
 	}

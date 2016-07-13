@@ -1,5 +1,6 @@
 package net.nigne.yzrproject.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -37,19 +38,24 @@ public class TheaterDAOImpl implements TheaterDAO {
 	}
 
 	@Override
-	public List<TheaterVO> getLocalTheaterNum() {
+	public List<Long> getLocalTheaterNum() {
 		int code = 1;
+		List<Long> list = new ArrayList<Long>();
 
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<TheaterVO> mainQuery = cb.createQuery(TheaterVO.class);
+		CriteriaQuery<Long> mainQuery = cb.createQuery(Long.class);
 		Root<TheaterVO> mainQueryroot = mainQuery.from(TheaterVO.class);
 		
-		mainQuery.select(mainQueryroot);
-		mainQuery.where(cb.equal(mainQueryroot.get("area_code"), code));
+		while(codeNum()>=code){
+			mainQuery.select(cb.count(mainQueryroot));
+			mainQuery.where(cb.equal(mainQueryroot.get("area_code"), code));
+			
+			TypedQuery<Long> tq = entityManager.createQuery(mainQuery);
+			list.add(tq.getSingleResult());
+			
+			code++;
+		}
 		
-		TypedQuery<TheaterVO> tq = entityManager.createQuery(mainQuery);
-		List<TheaterVO> list = tq.getResultList();
-	
 		return list;
 	}
 
@@ -67,6 +73,23 @@ public class TheaterDAOImpl implements TheaterDAO {
 		List<TheaterVO> list = tq.getResultList();
 		
 		return list;
+	}
+	
+	private int codeNum(){
+		
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<TheaterVO> mainQuery = cb.createQuery(TheaterVO.class);
+		Root<TheaterVO> mainQueryroot = mainQuery.from(TheaterVO.class);
+		
+		// select * from theater where theater_area = '지역이름'
+		mainQuery.select(mainQueryroot.get("theater_area")).distinct(true);
+		
+		TypedQuery<TheaterVO> tq = entityManager.createQuery(mainQuery);
+		List<TheaterVO> list = tq.getResultList();
+		
+		int codeNum = list.size();	
+		
+		return codeNum;
 	}
 
 }

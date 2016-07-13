@@ -6,7 +6,7 @@ import net.nigne.yzrproject.domain.TheaterVO;
 public interface TheaterDAO {
 	
 	public List<TheaterVO> getList();
-	public List<TheaterVO> getLocalTheaterNum();
+	public List<Long> getLocalTheaterNum();
 	public List<TheaterVO> getLocal();
 	
 }

@@ -79,19 +79,38 @@
 		width: 70px;
 		cursor:pointer;
 	}
-	.theater_state{
+	#theater_state{
 		margin-top:15px;
 		
 		float:left;
 		text-align: right;
-		width:150px;
+		width:130px;
 		
 	}
-	ul.theater_state>li>div{
+	
+	#theater_state_num{
+		margin-top:15px;
+		margin-left:-20px;
+		float:left;
+		text-align: left;
+		
+		width:20px;
+		
+	}
+	ul#theater_state>li>div{
 		background-color: rgba(166,166,166,0.2);
 		margin-bottom: 3px;
 		padding: 8px;
-		width:110px;
+		width:90px;
+		
+	}
+	
+	ul#theater_state_num>li>div{
+		background-color: rgba(166,166,166,0.2);
+		margin-bottom: 3px;
+		padding: 8px;
+		margin-left: -20px;
+		width:35px;
 		
 	}
 	.theater_city{
@@ -104,7 +123,8 @@
 		background-color: rgba(166,166,166,0.2);
 		margin-bottom: 3px;
 		padding: 8px;
-		width:140px
+		margin-left: 20px;
+		width:120px
 	}
 	
 	.timetable_time{
@@ -172,12 +192,18 @@
 				</ul>
 				<br>
 				<div style="height: 300px">
-					<ul class="theater_state">
+					<ul id="theater_state">
 						<c:forEach items="${ localList }" var="local_list">
 							<li style="float: none; display: inline-block;"><div>${ local_list }</div></li>
 						</c:forEach>
 						
-							<li style="float: none; display: inline-block;"><div>${ theaterNum }</div></li>
+					</ul>
+					<ul id="theater_state_num">
+						
+						<c:forEach items="${ theaterNum }" var="theater_num">
+							<li style="float: none; display: inline-block;"><div>(${ theater_num })</div></li>
+						</c:forEach>
+							
 						
 
 						
@@ -220,7 +246,9 @@
 			<td valign="top">
 			<div>
 				<div><span class="glyphicons glyphicons-brightness-increase"></span><span class="glyphicons glyphicons-moon"></span></div>
-				<div style="margin-left: 20px; margin-bottom: 5px;"><span style="color: #993800; font-weight: bold">2D(자막)</span> <span style="font-weight: bold;">1관 6층</span> (총158석)</div>
+				<c:forEach items="${ plexList }" var="plex_list">
+					<div style="margin-left: 20px; margin-bottom: 5px;"><span style="color: #993800; font-weight: bold"> ${ plex_list.plex_type } </span> <span style="font-weight: bold;">${ plex_list.plex_number }관 </span> (총 ${ plex_list.plex_seat_cnt }석)</div>
+				</c:forEach>
 				<div class="timetable_time">09:00</div><div class="timetable_seat">50석</div>
 				<div class="timetable_time">11:00</div><div class="timetable_seat">150석</div>
 				<div class="timetable_time">13:00</div><div class="timetable_seat">150석</div>
