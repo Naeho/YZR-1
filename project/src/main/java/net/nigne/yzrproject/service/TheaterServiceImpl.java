@@ -18,9 +18,9 @@ public class TheaterServiceImpl implements TheaterService {
 	
 	@Transactional(readOnly=true)
 	@Override
-	public List<TheaterVO> getList() {
+	public List<TheaterVO> getList(String theater) {
 		// TODO Auto-generated method stub
-		return dao.getList();
+		return dao.getList(theater);
 	}
 
 	@Override

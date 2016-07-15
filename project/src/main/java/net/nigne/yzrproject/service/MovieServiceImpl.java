@@ -15,9 +15,9 @@ public class MovieServiceImpl implements MovieService {
 	
 	@Transactional(readOnly=true)
 	@Override
-	public List<MovieVO> getList() {
+	public List<MovieVO> getList(String order) {
 		// TODO Auto-generated method stub
-		return dao.getList();
+		return dao.getList(order);
 	}
 
 }

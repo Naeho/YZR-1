@@ -20,16 +20,24 @@ public class MovieDAOImpl implements MovieDAO {
 	private EntityManager entityManager;
 
 	@Override
-	public List<MovieVO> getList() {
+	public List<MovieVO> getList(String order) {
 		// TODO Auto-generated method stub
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MovieVO> mainQuery = cb.createQuery(MovieVO.class);
 		Root<MovieVO> mainQueryroot = mainQuery.from(MovieVO.class);
 		
-		mainQuery.select(mainQueryroot);
+		if("reservation_rate".equals(order)) {
+			mainQuery.select(mainQueryroot).orderBy(cb.desc(mainQueryroot.get("reservation_rate")));
+			System.out.println("!@!#!@@#$#@!$");
+		} else {
+			mainQuery.select(mainQueryroot).orderBy(cb.asc(mainQueryroot.get("title")));
+			System.out.println("ddddddddddddddddddfd : " + order);
+		}
 		
 		TypedQuery<MovieVO> tq = entityManager.createQuery(mainQuery);
 		List<MovieVO> list = tq.getResultList();
+		
+		System.out.println("!111111111111111111111111 : " + list.get(0).getReservation_rate());
 		
 		return list;
 	}

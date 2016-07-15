@@ -21,7 +21,7 @@ public class TheaterDAOImpl implements TheaterDAO {
 	private EntityManager entityManager;
 
 	@Override
-	public List<TheaterVO> getList() {
+	public List<TheaterVO> getList(String theater) {
 		// TODO Auto-generated method stub
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<TheaterVO> mainQuery = cb.createQuery(TheaterVO.class);
@@ -29,7 +29,7 @@ public class TheaterDAOImpl implements TheaterDAO {
 		
 		// select * from theater where theater_area = '지역이름'
 		mainQuery.select(mainQueryroot);
-		mainQuery.where(cb.equal(mainQueryroot.get("theater_area"), "서울"));
+		mainQuery.where(cb.equal(mainQueryroot.get("theater_area"), theater));
 		
 		TypedQuery<TheaterVO> tq = entityManager.createQuery(mainQuery);
 		List<TheaterVO> list = tq.getResultList();

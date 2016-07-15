@@ -228,6 +228,12 @@
 				$(this).toggleClass("seat_clicked");
 			});
 		});
+		
+		$(document).ready(function() {
+			$(".seat_economy").click(function() {
+				$(this).toggleClass("seat_clicked");
+			});
+		});
 
 	</script>
 	

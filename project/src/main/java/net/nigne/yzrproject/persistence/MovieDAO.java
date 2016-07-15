@@ -5,6 +5,6 @@ import net.nigne.yzrproject.domain.MovieVO;
 
 public interface MovieDAO {
 	
-	public List<MovieVO> getList();
+	public List<MovieVO> getList(String order);
 	
 }

@@ -28,12 +28,9 @@ public class TimetableDAOImpl implements TimetableDAO {
 		
 		// select * from theater where theater_area = '지역이름'
 		mainQuery.select(mainQueryroot);
-		System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111");
 		mainQuery.where(cb.equal(mainQueryroot.get("movie_id"), 1), cb.equal(mainQueryroot.get("theater_id"), 1), cb.equal(mainQueryroot.get("plex_number"), 1));
-		System.out.println("2222222222222222222222222222222222222222222222222222222222222222222222222");
-		
+				
 		TypedQuery<TimetableVO> tq = entityManager.createQuery(mainQuery);
-		System.out.println("3333333333333333333333333333333333333333333333333333333333333333333333333333333");
 		List<TimetableVO> list = tq.getResultList();
 		System.out.println(list.size());
 		

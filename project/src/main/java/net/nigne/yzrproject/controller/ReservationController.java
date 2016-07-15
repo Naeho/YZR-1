@@ -1,12 +1,20 @@
 package net.nigne.yzrproject.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.nigne.yzrproject.domain.MovieVO;
 import net.nigne.yzrproject.domain.PlexVO;
 import net.nigne.yzrproject.domain.TheaterVO;
@@ -50,8 +58,8 @@ public class ReservationController {
 		
 		int timetableNum = 0;
 
-		List<MovieVO> movieList = movieService.getList();
-		List<TheaterVO> theaterList = theaterService.getList();
+		List<MovieVO> movieList = movieService.getList("reservation_rate");
+		List<TheaterVO> theaterList = theaterService.getList("서울");
 		List<TheaterVO> localList = theaterService.getLocal();
 		List<Long> theaterNum = theaterService.getLocalTheaterNum();
 		List<PlexVO> plexList = plexrService.getList();
@@ -69,18 +77,67 @@ public class ReservationController {
 		model.addAttribute("localList", localList);
 		model.addAttribute("theaterNum", theaterNum);
 		model.addAttribute("plexList", plexList);
+		model.addAttribute("timetableList", timetableList);
 		
 		return "main";
 	}
+	
+	
 	@RequestMapping(value = "/reservation", method = RequestMethod.GET)
 	public String reservation(Locale locale, Model model) throws Exception {
 		
 
-		List<MovieVO> movieList = movieService.getList();
 		
-		model.addAttribute("movieList", movieList);
 		
 		return "reservation";
 	}
 	
+	@RequestMapping(value = "/main/movie/{page}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> moviePage(
+			@PathVariable("page") String page
+			) {
+		ResponseEntity<Map<String, Object>> entity = null;
+		System.out.println(page);
+		
+		try{
+			List<MovieVO> list = movieService.getList(page);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("l", list);
+			
+
+			//브라우저로 전송한다
+			entity = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		} catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value = "/main/theater/{page}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> theaterPage(
+			@PathVariable("page") String page
+			) {
+		ResponseEntity<Map<String, Object>> entity = null;
+		System.out.println(page);
+		
+		try{
+			List<TheaterVO> list = theaterService.getList(page);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("l", list);
+			
+
+			//브라우저로 전송한다
+			entity = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		} catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+
 }
