@@ -70,5 +70,8 @@ public class MovieVO {
 		this.reservation_rate = reservation_rate;
 	}
 	
+//	public MovieVO(String movie_id){
+//		this.movie_id = movie_id;
+//	}
 	
 }

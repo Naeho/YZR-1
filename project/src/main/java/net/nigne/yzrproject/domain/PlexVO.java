@@ -16,11 +16,7 @@ public class PlexVO {
 	String plex_type;
 	@Column(name="plex_seat_cnt")
 	int plex_seat_cnt;
-	@Column(name="theater_id")
-	String theater_id;
-	@Column(name="movie_id")
-	String movie_id;
-	
+		
 	public String getPlex_number() {
 		return plex_number;
 	}
@@ -38,18 +34,6 @@ public class PlexVO {
 	}
 	public void setPlex_seat_cnt(int plex_seat_cnt) {
 		this.plex_seat_cnt = plex_seat_cnt;
-	}
-	public String getTheater_id() {
-		return theater_id;
-	}
-	public void setTheater_id(String theater_id) {
-		this.theater_id = theater_id;
-	}
-	public String getMovie_id() {
-		return movie_id;
-	}
-	public void setMovie_id(String movie_id) {
-		this.movie_id = movie_id;
 	}
 	
 }

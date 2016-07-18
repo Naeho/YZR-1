@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import net.nigne.yzrproject.domain.MovieVO;
 import net.nigne.yzrproject.domain.TheaterVO;
 
 @Repository
@@ -90,6 +91,21 @@ public class TheaterDAOImpl implements TheaterDAO {
 		int codeNum = list.size();	
 		
 		return codeNum;
+	}
+
+	@Override
+	public String getTheaterId(String theaterName) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<TheaterVO> mainQuery = cb.createQuery(TheaterVO.class);
+		Root<TheaterVO> mainQueryroot = mainQuery.from(TheaterVO.class);
+		
+		// select * from theater where theater_area = '지역이름'
+		mainQuery.select(mainQueryroot.get("theater_id"));
+		mainQuery.where(cb.equal(mainQueryroot.get("theater_name"), theaterName));
+		
+		TypedQuery<TheaterVO> tq = entityManager.createQuery(mainQuery);
+		TheaterVO list = tq.getSingleResult();
+		return list.getTheater_id();
 	}
 
 }

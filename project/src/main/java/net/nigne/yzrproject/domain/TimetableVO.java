@@ -21,7 +21,7 @@ public class TimetableVO {
 	@Column(name="plex_number")
 	String plex_number;
 	@Column(name="start_time")
-	Timestamp start_time;
+	String start_time;
 	
 	public int getNo() {
 		return no;
@@ -47,10 +47,10 @@ public class TimetableVO {
 	public void setPlex_number(String plex_number) {
 		this.plex_number = plex_number;
 	}
-	public Timestamp getStart_time() {
+	public String getStart_time() {
 		return start_time;
 	}
-	public void setStart_time(Timestamp start_time) {
+	public void setStart_time(String start_time) {
 		this.start_time = start_time;
 	}
 	

@@ -63,22 +63,13 @@ public class ReservationController {
 		List<TheaterVO> localList = theaterService.getLocal();
 		List<Long> theaterNum = theaterService.getLocalTheaterNum();
 		List<PlexVO> plexList = plexrService.getList();
-		List<TimetableVO> timetableList = timetableService.getList();
-		System.out.println(timetableList.size());
-		
-		while(timetableList.size() > timetableNum){
-			System.out.println(timetableNum + ":" + timetableList.get(timetableNum).getStart_time());
-			timetableNum++;
-		}
-
 		
 		model.addAttribute("movieList", movieList);
 		model.addAttribute("theaterList", theaterList);
 		model.addAttribute("localList", localList);
 		model.addAttribute("theaterNum", theaterNum);
 		model.addAttribute("plexList", plexList);
-		model.addAttribute("timetableList", timetableList);
-		
+				
 		return "main";
 	}
 	
@@ -128,6 +119,44 @@ public class ReservationController {
 			
 			Map<String, Object> map = new HashMap<>();
 			map.put("l", list);
+			
+
+			//브라우저로 전송한다
+			entity = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		} catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value = "/main/timetable/{movie}/{theater}/{date}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> timetablePage(
+			@PathVariable("movie") String movie,
+			@PathVariable("theater") String theater,
+			@PathVariable("date") String date
+			) {
+		ResponseEntity<Map<String, Object>> entity = null;
+		System.out.println(movie);
+		System.out.println(theater);
+		System.out.println(date);
+		
+		String movieId = movieService.getMovieId(movie);
+		String theaterId = theaterService .getTheaterId(theater);
+		
+		try{
+			List<TimetableVO> timetableList = timetableService.getList(movieId, theaterId, date);
+			
+			int timetableNum = 0;
+			
+			while(timetableList.size() > timetableNum){
+				System.out.println(timetableNum + ":" + timetableList.get(timetableNum).getStart_time());
+				timetableNum++;
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("l", timetableList);
 			
 
 			//브라우저로 전송한다

@@ -145,7 +145,9 @@
 	.calender{
 		
 		height: 30px;
-		width: 100px;
+		width: 195px;
+		padding-left: 30px;
+		cursor:pointer;
 	}
 	
 	#movie_list{
@@ -223,66 +225,7 @@
 			<td valign="top">
 				<div style="text-align: center; font-size: 15pt;" id = "year"></div><br>
 				<div style="margin-top: -20px; text-align: center; font-size: 30pt;" id = "month"></div><br>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day1"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date1"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day2"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date2"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day3"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date3"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day4"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date4"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day5"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date5"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day6"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date6"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day7"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date7"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day8"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date8"></li>
-					</ul>
-				</div>
-				<div class="calender">
-					<ul>
-						<li style="float: none; font-size: 13pt; margin-right: 5px;" id="day9"></li>
-						<li style="float: none; font-size: 13pt; font-weight: bold;" id="date9"></li>
-					</ul>
-				</div>
+				<div id="calender_date"></div>
 				
 			</td>
 			<td valign="top">
@@ -313,11 +256,15 @@
 	</div>
 	
 	<form id="frm" name="frm" method="post" action="/yzrproject/main">
-		<input type="text" id="order" name="order" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="movie" name="movie" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="theater" name="theater" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="date" name="date" size="50" maxlength="100" style="display:none;">
 	</form>
 	
 	<script>
-	
+		var checkMovie = false;
+		var checkTheater = false;
+		var checkDate = false;
 		var currentMoviePage = "reservation_rate";
 		var currentTheaterPage = "서울";
 	
@@ -430,27 +377,66 @@
 				date = "0" + date;
 			
 			document.getElementById("year").innerHTML = year;
+			document.getElementById("year").value = year;
 			document.getElementById("month").innerHTML = month;
-			document.getElementById("date").innerHTML = date;
-			document.getElementById("day").innerHTML = week[now.getDay()];
+			document.getElementById("month").value = month;
 			
-			for(i=1;i<10;i++){
-
-				now.setDate(now.getDate()+1);
-				
+			
+			var result = "";
+			
+			for(i=0;i<10;i++){
+				result += "<div class='calender' onclick='dateSelect("+ i +")'>" +  "<ul>" + "<li style='float: none; font-size: 13pt; margin-right: 5px;' id='day" + i 
+				+ "'></li>" + "<li style='float: none; font-size: 13pt; font-weight: bold;' id='date" + i + "'></li>" + "</ul>" + "</div>"
+			}
+			result += "";
+			document.getElementById("calender_date").innerHTML = result;
+			
+			for(i=0;i<10;i++){
 				date = now.getDate();
 				day = now.getDay();
-				
+
 				document.getElementById("date"+i).innerHTML = date;
+				document.getElementById("date"+i).value = date;
 				document.getElementById("day"+i).innerHTML = week[now.getDay()];
+				document.getElementById("day"+i).value = week[now.getDay()];
+				now.setDate(now.getDate()+1);
 			}
 
 		}
 		
 		$(document).ready(function() {
 			today();
+			
+			var interval = setInterval(function(){
+				if(checkMovie && checkTheater && checkDate){
+					alert("11");
+					clearInterval(interval);
+					var movie = $("#movie").val();
+					var theater = $("#theater").val();
+					var date = $("#year").val() + '-' + $("#month").val() + '-';
+					date += $("#date").val();
+					
+					alert(movie);
+					alert(theater);
+					alert(date);
+					getTimetable(movie, theater, date)
+				}	
+			}, 50)
+			
 		});
 		
+		function dateSelect(i){
+			
+			//alert(value);
+			var date = document.getElementById("date"+i).value;
+			checkDate = true;
+			alert("checkMovie = " + checkMovie);
+			alert("checkTheater = " + checkTheater);
+			alert("checkDate = " + checkDate);
+			frm.date.value = date;
+			//alert(date);
+		}
+
 		function order_reservation() {
 			$('#order').val("reservation_rate");
 			//alert($('#order').val());
@@ -470,14 +456,24 @@
 		
 		function movie_select(value) {
 			//alert(value);
+			checkMovie = true;
+			alert("checkMovie = " + checkMovie);
+			alert("checkTheater = " + checkTheater);
+			alert("checkDate = " + checkDate);
 			document.getElementById("selected_movie").innerHTML = value;
-		
+			
+			frm.movie.value = value;
 		}
 		
 		function theater_select(value) {
 			//alert(value);
+			checkTheater = true;
+			alert("checkMovie = " + checkMovie);
+			alert("checkTheater = " + checkTheater);
+			alert("checkDate = " + checkDate);
 			document.getElementById("selected_theater").innerHTML = value;
-		
+			
+			frm.theater.value = value;
 		}
 		
 		function getMovieList(page) {
@@ -552,6 +548,22 @@
 		getTheaterList("서울");
 		getMovieList("reservation_rate");
 		
+		function getTimetable(movie, theater, date) {			
+			$.ajax({
+				type:'get',
+				url:'/yzrproject/main/timetable/' + movie + '/' + theater + '/' + date,
+				headers: {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "GET",
+				},
+				dataType:'json',
+				data : '',
+				success : function(result){
+					//alert(result.l);
+					setMovieList(result.l);
+				}
+			});
+		}
 		
 		
 	</script>

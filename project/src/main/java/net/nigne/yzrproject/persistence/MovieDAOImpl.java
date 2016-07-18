@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import net.nigne.yzrproject.domain.MovieVO;
+import net.nigne.yzrproject.domain.PlexVO;
 
 @Repository
 public class MovieDAOImpl implements MovieDAO {
@@ -40,6 +41,22 @@ public class MovieDAOImpl implements MovieDAO {
 		System.out.println("!111111111111111111111111 : " + list.get(0).getReservation_rate());
 		
 		return list;
+	}
+
+	@Override
+	public String getMovieId(String movieName) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MovieVO> mainQuery = cb.createQuery(MovieVO.class);
+		Root<MovieVO> mainQueryroot = mainQuery.from(MovieVO.class);
+		
+		// select * from theater where theater_area = '지역이름'
+		mainQuery.select(mainQueryroot.get("movie_id"));
+		mainQuery.where(cb.equal(mainQueryroot.get("movie_name"), movieName));
+		
+		TypedQuery<MovieVO> tq = entityManager.createQuery(mainQuery);
+		MovieVO list = tq.getSingleResult();
+		
+		return list.getMovie_id();
 	}
 
 }

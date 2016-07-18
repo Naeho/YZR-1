@@ -21,20 +21,20 @@ public class PlexDAOImpl implements PlexDAO {
 
 	@Override
 	public List<PlexVO> getList() {
-		// TODO Auto-generated method stub
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PlexVO> mainQuery = cb.createQuery(PlexVO.class);
-		Root<PlexVO> mainQueryroot = mainQuery.from(PlexVO.class);
+//		// TODO Auto-generated method stub
+//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//		CriteriaQuery<PlexVO> mainQuery = cb.createQuery(PlexVO.class);
+//		Root<PlexVO> mainQueryroot = mainQuery.from(PlexVO.class);
+//		
+//		// select * from theater where theater_area = '지역이름'
+//		mainQuery.select(mainQueryroot);
+//		mainQuery.where(cb.equal(mainQueryroot.get("movie_id"), "1"), cb.equal(mainQueryroot.get("theater_id"), "1"));
+//		
+//		TypedQuery<PlexVO> tq = entityManager.createQuery(mainQuery);
+//		List<PlexVO> list = tq.getResultList();
 		
-		// select * from theater where theater_area = '지역이름'
-		mainQuery.select(mainQueryroot);
-		mainQuery.where(cb.equal(mainQueryroot.get("movie_id"), "1"), cb.equal(mainQueryroot.get("theater_id"), "1"));
 		
-		TypedQuery<PlexVO> tq = entityManager.createQuery(mainQuery);
-		List<PlexVO> list = tq.getResultList();
-		
-		
-		return list;
+		return null;
 	}
 
 }

@@ -35,4 +35,10 @@ public class TheaterServiceImpl implements TheaterService {
 		return dao.getLocal();
 	}
 
+	@Override
+	public String getTheaterId(String theaterName) {
+		// TODO Auto-generated method stub
+		return dao.getTheaterId(theaterName);
+	}
+
 }

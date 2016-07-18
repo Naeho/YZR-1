@@ -20,4 +20,10 @@ public class MovieServiceImpl implements MovieService {
 		return dao.getList(order);
 	}
 
+	@Override
+	public String getMovieId(String movieName) {
+		// TODO Auto-generated method stub
+		return dao.getMovieId(movieName);
+	}
+
 }

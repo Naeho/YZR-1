@@ -9,5 +9,6 @@ public interface TheaterService {
 	public List<TheaterVO> getList(String theater);
 	public List<Long> getLocalTheaterNum();
 	public List<TheaterVO> getLocal();
+	public String getTheaterId(String theaterName);
 	
 }

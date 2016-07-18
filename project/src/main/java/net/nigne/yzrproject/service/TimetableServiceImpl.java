@@ -15,9 +15,9 @@ public class TimetableServiceImpl implements TimetableService {
 	private TimetableDAO dao;
 
 	@Override
-	public List<TimetableVO> getList() {
+	public List<TimetableVO> getList(String movie, String theater, String date) {
 		// TODO Auto-generated method stub
-		return dao.getList();
+		return dao.getList(movie, theater, date);
 	}
 
 }
