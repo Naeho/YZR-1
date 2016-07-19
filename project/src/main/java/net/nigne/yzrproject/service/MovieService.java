@@ -7,6 +7,6 @@ import net.nigne.yzrproject.domain.MovieVO;
 public interface MovieService {
 	
 	public List<MovieVO> getList(String order);
-	public String getMovieId(String movieName);
+	public List<MovieVO> getMovieId(String movieName);
 	
 }

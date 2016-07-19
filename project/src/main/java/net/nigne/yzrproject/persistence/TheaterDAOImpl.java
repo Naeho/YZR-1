@@ -94,18 +94,20 @@ public class TheaterDAOImpl implements TheaterDAO {
 	}
 
 	@Override
-	public String getTheaterId(String theaterName) {
+	public List<TheaterVO> getTheaterId(String theaterName) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<TheaterVO> mainQuery = cb.createQuery(TheaterVO.class);
 		Root<TheaterVO> mainQueryroot = mainQuery.from(TheaterVO.class);
 		
 		// select * from theater where theater_area = '지역이름'
-		mainQuery.select(mainQueryroot.get("theater_id"));
+		mainQuery.select(mainQueryroot);
 		mainQuery.where(cb.equal(mainQueryroot.get("theater_name"), theaterName));
 		
 		TypedQuery<TheaterVO> tq = entityManager.createQuery(mainQuery);
-		TheaterVO list = tq.getSingleResult();
-		return list.getTheater_id();
+		List<TheaterVO> list = tq.getResultList();
+		
+		System.out.println("22222222222222222222222222222222222222222222222222"+list.get(0).getTheater_id());
+		return list;
 	}
 
 }

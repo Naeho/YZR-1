@@ -6,6 +6,6 @@ import net.nigne.yzrproject.domain.PlexVO;
 
 public interface PlexService {
 	
-	public List<PlexVO> getList();
+	public List<PlexVO> getList(String plexNum);
 	
 }

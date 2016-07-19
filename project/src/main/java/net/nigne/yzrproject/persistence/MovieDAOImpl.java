@@ -29,34 +29,36 @@ public class MovieDAOImpl implements MovieDAO {
 		
 		if("reservation_rate".equals(order)) {
 			mainQuery.select(mainQueryroot).orderBy(cb.desc(mainQueryroot.get("reservation_rate")));
-			System.out.println("!@!#!@@#$#@!$");
+			//System.out.println("!@!#!@@#$#@!$");
 		} else {
 			mainQuery.select(mainQueryroot).orderBy(cb.asc(mainQueryroot.get("title")));
-			System.out.println("ddddddddddddddddddfd : " + order);
+			//System.out.println("ddddddddddddddddddfd : " + order);
 		}
 		
 		TypedQuery<MovieVO> tq = entityManager.createQuery(mainQuery);
 		List<MovieVO> list = tq.getResultList();
 		
-		System.out.println("!111111111111111111111111 : " + list.get(0).getReservation_rate());
+		//System.out.println("!111111111111111111111111 : " + list.get(0).getReservation_rate());
 		
 		return list;
 	}
 
 	@Override
-	public String getMovieId(String movieName) {
+	public List<MovieVO> getMovieId(String movieName) {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MovieVO> mainQuery = cb.createQuery(MovieVO.class);
 		Root<MovieVO> mainQueryroot = mainQuery.from(MovieVO.class);
 		
 		// select * from theater where theater_area = '지역이름'
-		mainQuery.select(mainQueryroot.get("movie_id"));
-		mainQuery.where(cb.equal(mainQueryroot.get("movie_name"), movieName));
+		mainQuery.select(mainQueryroot);
+		mainQuery.where(cb.equal(mainQueryroot.get("title"), movieName));
 		
 		TypedQuery<MovieVO> tq = entityManager.createQuery(mainQuery);
-		MovieVO list = tq.getSingleResult();
+		List<MovieVO> list = tq.getResultList();
 		
-		return list.getMovie_id();
+		System.out.println("11111111111111111111111111111111111 : " + list.get(0).getMovie_id());
+		
+		return list;
 	}
 
 }

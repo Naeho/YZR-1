@@ -1,5 +1,6 @@
 package net.nigne.yzrproject.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import net.nigne.yzrproject.domain.MovieVO;
 import net.nigne.yzrproject.domain.PlexVO;
 import net.nigne.yzrproject.domain.TheaterVO;
@@ -40,7 +39,7 @@ public class ReservationController {
 	private TheaterService theaterService;
 	
 	@Autowired
-	private PlexService plexrService;
+	private PlexService plexService;
 	
 	@Autowired
 	private TimetableService timetableService;
@@ -56,19 +55,15 @@ public class ReservationController {
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) throws Exception {
 		
-		int timetableNum = 0;
-
 		List<MovieVO> movieList = movieService.getList("reservation_rate");
 		List<TheaterVO> theaterList = theaterService.getList("서울");
 		List<TheaterVO> localList = theaterService.getLocal();
 		List<Long> theaterNum = theaterService.getLocalTheaterNum();
-		List<PlexVO> plexList = plexrService.getList();
 		
 		model.addAttribute("movieList", movieList);
 		model.addAttribute("theaterList", theaterList);
 		model.addAttribute("localList", localList);
 		model.addAttribute("theaterNum", theaterNum);
-		model.addAttribute("plexList", plexList);
 				
 		return "main";
 	}
@@ -140,23 +135,44 @@ public class ReservationController {
 		ResponseEntity<Map<String, Object>> entity = null;
 		System.out.println(movie);
 		System.out.println(theater);
-		System.out.println(date);
+		System.out.println("===================================date = " + date);
 		
-		String movieId = movieService.getMovieId(movie);
-		String theaterId = theaterService .getTheaterId(theater);
+		List<MovieVO> movieList = movieService.getMovieId(movie);
+		List<TheaterVO> theaterList = theaterService .getTheaterId(theater);
+//		List<PlexVO> plexList = 
+		
+		String movieId = movieList.get(0).getMovie_id();
+		String theaterId = theaterList.get(0).getTheater_id();
+		System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111"+movieId);
+		System.out.println("2222222222222222222222222222222222222222222222222222222222222222222222"+theaterId);
 		
 		try{
-			List<TimetableVO> timetableList = timetableService.getList(movieId, theaterId, date);
+			List<TimetableVO> timetableList = new ArrayList<>();
+			List<String> plexNumList = timetableService.getPlexNum(movieId, theaterId, date);
+			List<PlexVO> plexTypeList = new ArrayList<>();
+			//timetableService.getList(movieId, theaterId, date);
 			
+			int plexNumCount = 0;
 			int timetableNum = 0;
 			
-			while(timetableList.size() > timetableNum){
-				System.out.println(timetableNum + ":" + timetableList.get(timetableNum).getStart_time());
-				timetableNum++;
+			String plexNum[] = new String[plexNumList.size()];
+			
+			while(plexNumList.size() > plexNumCount){				
+				plexNum[plexNumCount] = plexNumList.get(plexNumCount);
+				System.out.println(plexNum[plexNumCount]);
+				plexTypeList.addAll(plexService.getList(plexNum[plexNumCount]));
+				timetableList.addAll(timetableService.getList(movieId, theaterId, date, plexNum[plexNumCount]));
+				while(timetableList.size() > timetableNum){
+					System.out.println("54545454545454545454545454545454545454545454:" + timetableList.get(timetableNum).getStart_time());
+					System.out.println("==========================================================");
+					timetableNum++;
+				}
+				plexNumCount++;
 			}
 			
 			Map<String, Object> map = new HashMap<>();
 			map.put("l", timetableList);
+			map.put("t", plexTypeList);
 			
 
 			//브라우저로 전송한다

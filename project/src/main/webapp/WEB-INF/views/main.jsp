@@ -12,6 +12,7 @@
 		background-color: #FFFFE6;
 		padding-top: 15px;
 	}
+	
 	th{
 		border-left:2px solid #999;
 		border-right:2px solid #999;
@@ -21,6 +22,7 @@
 		font-size: 13pt;
 		padding: 5px;
 	}
+	
 	.movie_menu{
 		float:left;
 		padding-right:7px;
@@ -28,11 +30,13 @@
 		text-align: center;
 		cursor:pointer;
 	}
+	
 	#movie_menu1{
 		border: 2px solid #000;
 		border-bottom: 0px solid #000;
 		width: 70px;
 	}
+	
 	#movie_menu2{
 		border: 1px solid #999;
 		border-bottom: 2px solid #000;
@@ -43,6 +47,7 @@
 		border-bottom: 2px solid #000;
 		width: 70px;
 	}
+	
 	.movie_second_menu{
 		float:left;
 		padding-right:8px;
@@ -52,41 +57,49 @@
 		width: 80px;
 		cursor:pointer;
 	}
+	
 	#movie_second_menu1{
 		border-bottom: 2px solid #000;
 		cursor:pointer;
 	}
+	
 	.theater_menu{
 		float:left;
 		padding-right:7px;
 		padding-left:7px;
 		text-align: center;
 	}
+	
 	#theater_menu1{
 		border: 2px solid #000;
 		border-bottom: 0px solid #000;
 		width: 70px;
 		cursor:pointer;
 	}
+	
 	#theater_menu2{
 		border: 1px solid #999;
 		border-bottom: 2px solid #000;
 		width: 100px;
 		cursor:pointer;
 	}
+	
 	#theater_menu3{
 		border: 1px solid #999;
 		border-bottom: 2px solid #000;
 		width: 70px;
 		cursor:pointer;
 	}
+	
 	#theater_state{
 		margin-top:15px;
-		
 		float:left;
 		text-align: right;
 		width:130px;
-		
+	}
+	
+	#time{
+		cursor:pointer;
 	}
 	
 	#theater_state_num{
@@ -94,10 +107,9 @@
 		margin-left:-20px;
 		float:left;
 		text-align: left;
-		
-		width:20px;
-		
+		width:20px;	
 	}
+	
 	ul#theater_state>li>div{
 		background-color: rgba(166,166,166,0.2);
 		margin-bottom: 3px;
@@ -114,12 +126,14 @@
 		width:35px;
 		
 	}
+	
 	.theater_city{
 		margin-top:15px;
 		margin-left:-35px;
 		float:left;
 		text-align: left;
 	}
+	
 	#theater_detail>div{
 		background-color: rgba(166,166,166,0.2);
 		margin-bottom: 3px;
@@ -131,7 +145,7 @@
 	.timetable_time{
 		border: 1px solid #999;
 		float: left;
-		margin-left: 20px;
+		margin-left: 15px;
 		margin-right: 3px;
 		margin-bottom: 5px;
 	}
@@ -153,6 +167,7 @@
 	#movie_list{
 		cursor:pointer;
 	}
+	
 	#theater_detail{
 		cursor:pointer;
 	}
@@ -170,7 +185,7 @@
 			<th style="width:500px">시간</th>
 		</tr>
 		<tr style="height: 100px">
-			<td valign="top">
+			<td valign="top" style="height: 420px; width: 311px;">
 				<ul>
 					<div id="movie_menu1" class="movie_menu"><li style="float: none; display: inline-block;">전체</li></div>
 					<div id="movie_menu2" class="movie_menu"><li style="float: none; display: inline-block;">아트하우스</li></div>
@@ -185,7 +200,7 @@
 				<br>
 				<div id="movie_list"></div>
 			</td>
-			<td valign="top">
+			<td valign="top" style="height: 420px; width: 323px;">
 				<div style="float:left; border-top:2px solid #999; border-bottom:2px solid #999; width:120px; margin-left:45px;
 							color: red; font-weight: bold;">
 					자주가는 CGV<br>
@@ -222,21 +237,16 @@
 					</ul>
 				</div>
 			</td>
-			<td valign="top">
+			<td valign="top" style="height: 420px; width: 199px; overflow: scroll;" >
 				<div style="text-align: center; font-size: 15pt;" id = "year"></div><br>
 				<div style="margin-top: -20px; text-align: center; font-size: 30pt;" id = "month"></div><br>
 				<div id="calender_date"></div>
 				
 			</td>
-			<td valign="top">
-				<div>
+			<td valign="top" style="height: 420px; width: 305px;">
+				<div id="timetable">
 					<div><span class="glyphicons glyphicons-brightness-increase"></span><span class="glyphicons glyphicons-moon"></span></div>
-					<c:forEach items="${ plexList }" var="plex_list">
-						<div style="margin-left: 20px; margin-bottom: 5px; float:none; clear:both;"><span style="color: #993800; font-weight: bold"> ${ plex_list.plex_type } </span> <span style="font-weight: bold;">${ plex_list.plex_number }관 </span> (총 ${ plex_list.plex_seat_cnt }석)</div>
-						<c:forEach items="${ timetableList }" var="timetable_list">
-							<div class="timetable_time">${ fn:substring(timetable_list.start_time, 11,16) }</div><div class="timetable_seat">50석</div>
-						</c:forEach>
-					</c:forEach>
+					
 				</div>
 			</td>
 		</tr>
@@ -384,14 +394,14 @@
 			
 			var result = "";
 			
-			for(i=0;i<10;i++){
+			for(i=0;i<15;i++){
 				result += "<div class='calender' onclick='dateSelect("+ i +")'>" +  "<ul>" + "<li style='float: none; font-size: 13pt; margin-right: 5px;' id='day" + i 
 				+ "'></li>" + "<li style='float: none; font-size: 13pt; font-weight: bold;' id='date" + i + "'></li>" + "</ul>" + "</div>"
 			}
 			result += "";
 			document.getElementById("calender_date").innerHTML = result;
 			
-			for(i=0;i<10;i++){
+			for(i=0;i<15;i++){
 				date = now.getDate();
 				day = now.getDay();
 
@@ -404,37 +414,55 @@
 
 		}
 		
-		$(document).ready(function() {
-			today();
-			
+		function interval(){
 			var interval = setInterval(function(){
 				if(checkMovie && checkTheater && checkDate){
-					alert("11");
+					//alert("11");
 					clearInterval(interval);
 					var movie = $("#movie").val();
-					var theater = $("#theater").val();
-					var date = $("#year").val() + '-' + $("#month").val() + '-';
-					date += $("#date").val();
+					var month = $("#month").val();
 					
-					alert(movie);
-					alert(theater);
-					alert(date);
+					if(month < 10){
+						month = "0" + month;
+					}
+					
+					var days = $("#date").val();
+					
+					if(date < 10){
+						date = "0" + date;
+					}
+					
+					var theater = $("#theater").val();
+					var date = $("#year").val() + '-' + month + '-';
+					date += days;
+					
+					//alert(movie);
+					//alert(theater);
+					//alert(date);
 					getTimetable(movie, theater, date)
 				}	
 			}, 50)
+		}
+		
+		$(document).ready(function() {
+			today();
+			
+			interval();
 			
 		});
 		
 		function dateSelect(i){
-			
+			checkDate = false;
 			//alert(value);
 			var date = document.getElementById("date"+i).value;
-			checkDate = true;
-			alert("checkMovie = " + checkMovie);
-			alert("checkTheater = " + checkTheater);
-			alert("checkDate = " + checkDate);
+			
+			//alert("checkMovie = " + checkMovie);
+			//alert("checkTheater = " + checkTheater);
+			//alert("checkDate = " + checkDate);
 			frm.date.value = date;
 			//alert(date);
+			checkDate = true;
+			interval();
 		}
 
 		function order_reservation() {
@@ -455,25 +483,32 @@
 		}
 		
 		function movie_select(value) {
+			checkMovie = false;
 			//alert(value);
-			checkMovie = true;
-			alert("checkMovie = " + checkMovie);
-			alert("checkTheater = " + checkTheater);
-			alert("checkDate = " + checkDate);
+			
+			//alert("checkMovie = " + checkMovie);
+			//alert("checkTheater = " + checkTheater);
+			//alert("checkDate = " + checkDate);
 			document.getElementById("selected_movie").innerHTML = value;
 			
 			frm.movie.value = value;
+			
+			checkMovie = true;
+			interval();
 		}
 		
 		function theater_select(value) {
+			checkTheater = false;
 			//alert(value);
-			checkTheater = true;
-			alert("checkMovie = " + checkMovie);
-			alert("checkTheater = " + checkTheater);
-			alert("checkDate = " + checkDate);
+			
+			//alert("checkMovie = " + checkMovie);
+			//alert("checkTheater = " + checkTheater);
+			//alert("checkDate = " + checkDate);
 			document.getElementById("selected_theater").innerHTML = value;
 			
 			frm.theater.value = value;
+			checkTheater = true;
+			interval();
 		}
 		
 		function getMovieList(page) {
@@ -511,6 +546,38 @@
 			document.getElementById("movie_list").innerHTML = result;
 		}
 		
+		function setTimetableList(time, plex) {
+			//alert("ee");
+			var result = "";
+			var number = 1;
+			if(time == "" || plex == ""){
+				//alert("dddddd");
+				result += '<div></div>';
+				document.getElementById("timetable").innerHTML = result;
+			}else {
+				$(plex).each(function() {
+					result += '<div style="margin-left: 20px; margin-bottom: 5px; float:none; clear:both;"><span style="color: #993800; font-weight: bold">'
+						+ this.plex_type + '</span> <span style="font-weight: bold;">' + this.plex_number + '관 </span> (총 '
+						+ this.plex_seat_cnt + '석)</div>';
+					//alert(this.plex_number);
+					
+						$(time).each(function() {
+							if(this.plex_number == number){
+								result += '<div id="time" onclick="aa(' + "'" + this.start_time.substring(11,16) + "', " + "'" + this.plex_number + "'" +');"><div class="timetable_time">' + this.start_time.substring(11,16) + '</div><div class="timetable_seat">50석</div></div>';
+							}
+							document.getElementById("timetable").innerHTML = result;
+						});
+					number++;
+				});
+			}
+
+		}
+		
+		function aa(time, plex){
+			alert(time);
+			alert(plex);
+		}
+				
 		function getTheaterList(page) {
 			
 			if(page == null){
@@ -548,7 +615,8 @@
 		getTheaterList("서울");
 		getMovieList("reservation_rate");
 		
-		function getTimetable(movie, theater, date) {			
+		function getTimetable(movie, theater, date) {
+			//alert(date);
 			$.ajax({
 				type:'get',
 				url:'/yzrproject/main/timetable/' + movie + '/' + theater + '/' + date,
@@ -560,7 +628,7 @@
 				data : '',
 				success : function(result){
 					//alert(result.l);
-					setMovieList(result.l);
+					setTimetableList(result.l,result.t);
 				}
 			});
 		}

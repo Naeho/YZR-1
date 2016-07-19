@@ -54,6 +54,8 @@ public class TimetableVO {
 		this.start_time = start_time;
 	}
 	
-	
+//	public TimetableVO(String plex_num){
+//		this.plex_number = plex_num;
+//	}
 
 }

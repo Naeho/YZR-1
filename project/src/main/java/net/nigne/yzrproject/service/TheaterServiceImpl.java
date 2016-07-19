@@ -36,7 +36,7 @@ public class TheaterServiceImpl implements TheaterService {
 	}
 
 	@Override
-	public String getTheaterId(String theaterName) {
+	public List<TheaterVO> getTheaterId(String theaterName) {
 		// TODO Auto-generated method stub
 		return dao.getTheaterId(theaterName);
 	}

@@ -6,6 +6,7 @@ import net.nigne.yzrproject.domain.TimetableVO;
 
 public interface TimetableService {
 	
-	public List<TimetableVO> getList(String movie, String theater, String date);
+	public List<TimetableVO> getList(String movie, String theater, String date, String plex_number);
+	public List<String> getPlexNum(String movie, String theater, String date);
 	
 }

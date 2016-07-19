@@ -15,9 +15,9 @@ public class PlexServiceImpl implements PlexService {
 	private PlexDAO dao;
 
 	@Override
-	public List<PlexVO> getList() {
+	public List<PlexVO> getList(String plexNum) {
 		// TODO Auto-generated method stub
-		return dao.getList();
+		return dao.getList(plexNum);
 	}
 
 }
