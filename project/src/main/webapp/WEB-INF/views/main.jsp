@@ -265,10 +265,14 @@
 		<div style="float: right;"><button onclick="nextStep();" style="margin-top: 50px; margin-right: 50px; background-color: #999; color: #fff;"><span style="font-size: 35pt;color: #fff; font-weight: bolder;">></span><br/>좌석선택</button></div>
 	</div>
 	
-	<form id="frm" name="frm" method="post" action="/yzrproject/main">
+	<form id="frm" name="frm" method="post" action="/yzrproject/reservation">
 		<input type="text" id="movie" name="movie" size="50" maxlength="100" style="display:none;">
 		<input type="text" id="theater" name="theater" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="year" name="year" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="month" name="month" size="50" maxlength="100" style="display:none;">
 		<input type="text" id="date" name="date" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="start_time" name="start_time" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="plex" name="plex" size="50" maxlength="100" style="display:none;">
 	</form>
 	
 	<script>
@@ -279,7 +283,23 @@
 		var currentTheaterPage = "서울";
 	
 		function nextStep(){
-			location.href="/yzrproject/reservation";
+			
+			if(frm.month.value < 10 && frm.month.value.length != 2){
+				frm.month.value = "0" + frm.month.value;
+			}
+			
+			if(frm.plex.value == "" || frm.plex.value == null) {
+				alert("시간을 선택해 주세요");	
+			} else {
+				alert(frm.movie.value);
+				alert(frm.theater.value);
+				alert(frm.year.value);
+				alert(frm.month.value);
+				alert(frm.date.value);
+				alert(frm.start_time.value);
+				alert(frm.plex.value);
+				frm.submit();
+			}
 		}	
 	
 		$(document).ready(function() {
@@ -359,12 +379,6 @@
 				$("#theater_menu2").css("border-bottom", "2px solid #000");
 				$("#theater_menu3").css("border", "2px solid #000");
 				$("#theater_menu3").css("border-bottom", "0px solid #000");
-			});
-		});
-		
-		$(document).ready(function() {
-			$(".state_value").click(function(){
-				//alert($(this).val());
 			});
 		});
 		
@@ -459,6 +473,8 @@
 			//alert("checkMovie = " + checkMovie);
 			//alert("checkTheater = " + checkTheater);
 			//alert("checkDate = " + checkDate);
+			frm.year.value = $('#year').val();
+			frm.month.value = $('#month').val();
 			frm.date.value = date;
 			//alert(date);
 			checkDate = true;
@@ -576,6 +592,8 @@
 		function aa(time, plex){
 			alert(time);
 			alert(plex);
+			frm.start_time.value = time;
+			frm.plex.value = plex;
 		}
 				
 		function getTheaterList(page) {
@@ -606,7 +624,7 @@
 			
 			$(data).each(function() {
 				result += "<div onclick='theater_select(" + '"' + this.theater_name + '"' + ")'><li style='float: none; display: inline-block;'>" + this.theater_name + "</li></div>"
-			})
+			});
 			
 			result += "";
 

@@ -12,10 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import net.nigne.yzrproject.domain.EmpVO;
 import net.nigne.yzrproject.domain.MovieVO;
 import net.nigne.yzrproject.domain.PlexVO;
+import net.nigne.yzrproject.domain.Reservation_listVO;
 import net.nigne.yzrproject.domain.TheaterVO;
 import net.nigne.yzrproject.domain.TimetableVO;
 import net.nigne.yzrproject.service.MovieService;
@@ -68,11 +72,14 @@ public class ReservationController {
 		return "main";
 	}
 	
-	
 	@RequestMapping(value = "/reservation", method = RequestMethod.GET)
-	public String reservation(Locale locale, Model model) throws Exception {
+	public String reservaion_get(Locale locale, Model model) throws Exception {
 		
-
+		return "reservation";
+	}
+	
+	@RequestMapping(value = "/reservation", method = RequestMethod.POST)
+	public String reservation(Locale locale, Model model) throws Exception {
 		
 		
 		return "reservation";

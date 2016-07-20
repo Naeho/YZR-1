@@ -18,12 +18,7 @@
 	
 	.seat_num{
 		margin-bottom:3px;
-	}
-	
-	.seat_num>div{
-		margin-right: 5px;
-		float:left;
-		text-align: center;
+		
 	}
 	
 	input{
@@ -119,6 +114,25 @@
 		background-color: #FFFFE6;
 		
 	}
+	
+	.seat_count_nomal,.seat_count_youth,.seat_count_advantage{
+		border: 1px solid #000;
+		height: 20px;
+		width: 20px;
+		background-color: #e11;
+	}
+	
+	.seat_nomal,.seat_youth,.seat_advantage,.seat_title{
+		margin-right: 5px;
+		float:left;
+		text-align: center;
+	}
+	.seat_nomal,.seat_youth,.seat_advantage{
+		cursor: pointer;
+		border: 1px solid #000;
+		height: 20px;
+		width: 20px;
+	}
 
 </style>
 	<table>
@@ -130,37 +144,40 @@
 		<tr>
 			<td style="width: 500px;">
 				<div class="seat_num">
-					<div style="width: 80px; height: 20px; margin-left:10px; text-align: left;">일반</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">1</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">2</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">3</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">4</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">5</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">6</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">7</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">8</div>
+					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left;">일반</div>
+					<div class="seat_nomal">0</div>
+					<div class="seat_nomal">1</div>
+					<div class="seat_nomal">2</div>
+					<div class="seat_nomal">3</div>
+					<div class="seat_nomal">4</div>
+					<div class="seat_nomal">5</div>
+					<div class="seat_nomal">6</div>
+					<div class="seat_nomal">7</div>
+					<div class="seat_nomal">8</div>
 				</div>
 				<div class="seat_num">
-					<div style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">청소년</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px; margin-left:95px;">1</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">2</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">3</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">4</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">5</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">6</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">7</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">8</div>
+					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">청소년</div>
+					<div class="seat_youth" style="margin-left:95px;">0</div>
+					<div class="seat_youth">1</div>
+					<div class="seat_youth">2</div>
+					<div class="seat_youth">3</div>
+					<div class="seat_youth">4</div>
+					<div class="seat_youth">5</div>
+					<div class="seat_youth">6</div>
+					<div class="seat_youth">7</div>
+					<div class="seat_youth">8</div>
 				</div>
 				<div class="seat_num">
-					<div style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">우대</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px; margin-left:95px;">1</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">2</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">3</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">4</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">5</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">6</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">7</div>
-					<div style="border: 1px solid #000; height: 20px; width: 20px;">8</div>
+					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">우대</div>
+					<div class="seat_advantage" style="margin-left:95px;">0</div>
+					<div class="seat_advantage">1</div>
+					<div class="seat_advantage">2</div>
+					<div class="seat_advantage">3</div>
+					<div class="seat_advantage">4</div>
+					<div class="seat_advantage">5</div>
+					<div class="seat_advantage">6</div>
+					<div class="seat_advantage">7</div>
+					<div class="seat_advantage">8</div>
 				</div>
 			</td>
 			<td style="width: 200px; text-align: center;">
@@ -211,6 +228,14 @@
 	</div>
 	
 	<script>
+	
+		var nomalFlag = false;
+		var youthFlag = false;
+		var advantageFlag = false;
+		var nomalCount = 0;
+		var youthCount = 0;
+		var advantageCount = 0;
+	
 		$(document).ready(function() {
 			$(".seat_prime").click(function() {
 				$(this).toggleClass("seat_clicked");
@@ -234,6 +259,73 @@
 				$(this).toggleClass("seat_clicked");
 			});
 		});
+		
+		$(document).ready(function() {
+			
+			$(".seat_nomal").click(function() {
+				if(nomalFlag){
+					reset("nomal");
+					nomalFlag = false;
+				}
+				alert(nomalCount);
+				nomalCount = $(this).text();
+				
+				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
+					alert("1111");
+					$(this).toggleClass("seat_count_nomal");
+					nomalFlag = true;
+				} else{
+					alert("안댐!");
+				}
+				
+			});
+		});
+		
+		$(document).ready(function() {
+			
+			$(".seat_youth").click(function() {
+				if(youthFlag){
+					reset("youth");
+					youthFlag = false;
+				}
+				
+				youthCount = $(this).text();
+				
+				alert(Number(nomalCount) + Number(youthCount) + Number(advantageCount));
+				
+				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
+					$(this).toggleClass("seat_count_youth");
+					youthFlag = true;
+				} else{
+					alert("안댐!");
+				}
+				
+			});
+		});
+		
+		$(document).ready(function() {
+			
+			$(".seat_advantage").click(function() {
+				if(advantageFlag){
+					reset("advantage");
+					advantageFlag = false;
+				}
+				
+				advantageCount = $(this).text();
+				
+				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
+					$(this).toggleClass("seat_count_advantage");
+					advantageFlag = true;
+				} else{
+					alert("안댐!");
+				}
+				
+			});
+		});
+		
+		function reset(name) {
+			$(".seat_count_" + name).removeClass("seat_count_" + name);
+		}
 
 	</script>
 	
