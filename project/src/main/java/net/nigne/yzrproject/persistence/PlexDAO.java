@@ -5,6 +5,6 @@ import net.nigne.yzrproject.domain.PlexVO;
 
 public interface PlexDAO {
 	
-	public List<PlexVO> getList(String plexNum);
+	public List<PlexVO> getList(String plexNum, String theaterId);
 	
 }

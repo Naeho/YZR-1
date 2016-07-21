@@ -145,7 +145,7 @@
 			<td style="width: 500px;">
 				<div class="seat_num">
 					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left;">일반</div>
-					<div class="seat_nomal">0</div>
+					<div id="nomal_defalut" class="seat_nomal">0</div>
 					<div class="seat_nomal">1</div>
 					<div class="seat_nomal">2</div>
 					<div class="seat_nomal">3</div>
@@ -157,7 +157,7 @@
 				</div>
 				<div class="seat_num">
 					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">청소년</div>
-					<div class="seat_youth" style="margin-left:95px;">0</div>
+					<div id="youth_defalut" class="seat_youth" style="margin-left:95px;">0</div>
 					<div class="seat_youth">1</div>
 					<div class="seat_youth">2</div>
 					<div class="seat_youth">3</div>
@@ -169,7 +169,7 @@
 				</div>
 				<div class="seat_num">
 					<div class="seat_title" style="width: 80px; height: 20px; margin-left:10px; text-align: left; float:none">우대</div>
-					<div class="seat_advantage" style="margin-left:95px;">0</div>
+					<div id="advantage_defalut" class="seat_advantage" style="margin-left:95px;">0</div>
 					<div class="seat_advantage">1</div>
 					<div class="seat_advantage">2</div>
 					<div class="seat_advantage">3</div>
@@ -183,10 +183,10 @@
 			<td style="width: 200px; text-align: center;">
 				<div>좌석붙임설정</div>
 				<div style="margin-left: 30px; height: 25px;">
-					<input name="seat_num" type="radio"><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
-					<input name="seat_num" type="radio"><div class="box"></div><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
-					<input name="seat_num" type="radio"><div class="box"></div><div class="box"></div><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
-					<input name="seat_num" type="radio"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+					<input name="seat_num" type="radio" value="1"><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
+					<input name="seat_num" type="radio" value="2"><div class="box"></div><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
+					<input name="seat_num" type="radio" value="3"><div class="box"></div><div class="box"></div><div class="box"></div><div style="margin-right: 5px; height: 18px; float: left"></div>
+					<input name="seat_num" type="radio" value="4"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
 				</div>
 			</td>
 			<td>
@@ -229,12 +229,21 @@
 	
 	<script>
 	
-		var nomalFlag = false;
-		var youthFlag = false;
-		var advantageFlag = false;
 		var nomalCount = 0;
 		var youthCount = 0;
 		var advantageCount = 0;
+		var countSum = 0;
+		var currentCheckedValue = 0;
+		var radioCheked = 0;
+		var endTime = "";
+		
+		$(document).ready(function() {
+			$("#nomal_defalut").addClass("seat_count_nomal");
+			$("#youth_defalut").addClass("seat_count_youth");
+			$("#advantage_defalut").addClass("seat_count_advantage");
+			//endTimeGenerate("15:00", 180);
+		});
+		
 	
 		$(document).ready(function() {
 			$(".seat_prime").click(function() {
@@ -245,6 +254,52 @@
 		$(document).ready(function() {
 			$(".seat_standard").click(function() {
 				$(this).toggleClass("seat_clicked");
+			});
+
+			$(".seat_standard, .seat_prime, .seat_economy").mouseover(function() {
+				if(currentCheckedValue == 1){
+					$(this).addClass("seat_clicked");
+				} else if(currentCheckedValue == 2){
+					$(this).addClass("seat_clicked");
+					if($(this).next().hasClass("seat_empty") === true){
+						$(this).prev().addClass("seat_clicked");
+					} else {
+						$(this).next().addClass("seat_clicked");
+					}
+					
+					
+				} else if(currentCheckedValue == 3){
+					$(this).addClass("seat_clicked");
+					$(this).next().addClass("seat_clicked");
+					$(this).next().next().addClass("seat_clicked");
+				} else if(currentCheckedValue == 4){
+					$(this).addClass("seat_clicked");
+					$(this).next().addClass("seat_clicked");
+					$(this).next().next().addClass("seat_clicked");
+					$(this).next().next().next().addClass("seat_clicked");
+				}
+			});
+			
+			$(".seat_standard, .seat_prime, .seat_economy").mouseout(function() {
+				if(currentCheckedValue == 1){
+					$(this).removeClass("seat_clicked");
+				} else if(currentCheckedValue == 2){
+					$(this).removeClass("seat_clicked");
+					if($(this).next().hasClass("seat_empty") === true){
+						$(this).prev().removeClass("seat_clicked");
+					} else {
+						$(this).next().removeClass("seat_clicked");
+					}
+				} else if(currentCheckedValue == 3){
+					$(this).removeClass("seat_clicked");
+					$(this).next().removeClass("seat_clicked");
+					$(this).next().next().removeClass("seat_clicked");
+				} else if(currentCheckedValue == 4){
+					$(this).removeClass("seat_clicked");
+					$(this).next().removeClass("seat_clicked");
+					$(this).next().next().removeClass("seat_clicked");
+					$(this).next().next().next().removeClass("seat_clicked");
+				}
 			});
 		});
 		
@@ -263,19 +318,28 @@
 		$(document).ready(function() {
 			
 			$(".seat_nomal").click(function() {
-				if(nomalFlag){
-					reset("nomal");
-					nomalFlag = false;
-				}
-				alert(nomalCount);
+				
+				radioCheked = $('input[name="seat_num"]:checked').length;
+				
+				countSum -=  nomalCount;
+				
 				nomalCount = $(this).text();
 				
-				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
-					alert("1111");
+				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
+				
+				if(countSum <= 8){
+					reset("nomal");
 					$(this).toggleClass("seat_count_nomal");
-					nomalFlag = true;
+					if(countSum == 0 && radioCheked == 1){
+						$(this).prop('checked',false);
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+						currentCheckedValue = 0;
+					} else if(radioCheked == 1 && countSum < currentCheckedValue){
+						currentCheckedValue = countSum;
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+					}
 				} else{
-					alert("안댐!");
+					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
 				}
 				
 			});
@@ -284,20 +348,29 @@
 		$(document).ready(function() {
 			
 			$(".seat_youth").click(function() {
-				if(youthFlag){
-					reset("youth");
-					youthFlag = false;
-				}
+				
+				radioCheked = $('input[name="seat_num"]:checked').length;
+				
+				countSum -=  youthCount;
 				
 				youthCount = $(this).text();
 				
-				alert(Number(nomalCount) + Number(youthCount) + Number(advantageCount));
+				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
 				
-				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
+				if(countSum <= 8){
+					reset("youth");
 					$(this).toggleClass("seat_count_youth");
-					youthFlag = true;
+					
+					if(countSum == 0 && radioCheked == 1){
+						$(this).prop('checked',false);
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+						currentCheckedValue = 0;
+					} else if(radioCheked == 1 && countSum < currentCheckedValue){
+						currentCheckedValue = countSum;
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+					}
 				} else{
-					alert("안댐!");
+					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
 				}
 				
 			});
@@ -306,18 +379,28 @@
 		$(document).ready(function() {
 			
 			$(".seat_advantage").click(function() {
-				if(advantageFlag){
-					reset("advantage");
-					advantageFlag = false;
-				}
+				
+				radioCheked = $('input[name="seat_num"]:checked').length;
+				
+				countSum -=  advantageCount;
 				
 				advantageCount = $(this).text();
 				
-				if(Number(nomalCount) + Number(youthCount) + Number(advantageCount) <= 8){
+				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
+				
+				if(countSum <= 8){
+					reset("advantage");
 					$(this).toggleClass("seat_count_advantage");
-					advantageFlag = true;
+					if(countSum == 0 && radioCheked == 1){
+						$(this).prop('checked',false);
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+						currentCheckedValue = 0;
+					} else if(radioCheked == 1 && countSum < currentCheckedValue){
+						currentCheckedValue = countSum;
+						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+					}
 				} else{
-					alert("안댐!");
+					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
 				}
 				
 			});
@@ -325,6 +408,48 @@
 		
 		function reset(name) {
 			$(".seat_count_" + name).removeClass("seat_count_" + name);
+		}
+		
+		$(document).ready(function() {
+			
+			var seatNum = $("input[name=seat_num]").click(function() {
+				var value = $(this).val();
+				if(countSum < value){
+					$(this).prop('checked',false);
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+				} else {
+					$(this).prop('checked',true);
+					currentCheckedValue = $(this).val();
+				}
+				
+			});
+		});
+		
+		function endTimeGenerate(startTime, runtime){
+			var divideTime = startTime.split(":");
+			alert( divideTime[0]+"시");
+			alert(divideTime[1]+"분");
+			var minute = 0;
+			var hour = 0;
+			
+			minute = Number(divideTime[1]) + runtime;
+			hour = Number(divideTime[0]);
+			if(minute >= 60){
+				hour += minute / 60;
+				hour = Math.floor(hour);
+				minute = minute % 60;
+				if(minute < 10){
+					minute = "0" + minute;
+				}
+			}
+			
+			alert(hour+"시");
+			alert(minute+"분");
+			
+			endTime = hour + ":" + minute;
+			alert("런타임 : " + runtime + "분");
+			alert("시작 시간 : " + startTime);
+			alert("종료 시간 : " + endTime);
 		}
 
 	</script>

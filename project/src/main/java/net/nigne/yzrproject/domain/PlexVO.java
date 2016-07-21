@@ -10,13 +10,29 @@ import javax.persistence.Table;
 public class PlexVO {
 	
 	@Id
+	@Column(name="no")
+	int no;
+	@Column(name="theater_id")
+	String theater_id;
 	@Column(name="plex_number")
 	String plex_number;
 	@Column(name="plex_type")
 	String plex_type;
 	@Column(name="plex_seat_cnt")
 	int plex_seat_cnt;
-		
+	
+	public int getNo() {
+		return no;
+	}
+	public void setNo(int no) {
+		this.no = no;
+	}
+	public String getTheater_id() {
+		return theater_id;
+	}
+	public void setTheater_id(String theater_id) {
+		this.theater_id = theater_id;
+	}
 	public String getPlex_number() {
 		return plex_number;
 	}
@@ -35,5 +51,5 @@ public class PlexVO {
 	public void setPlex_seat_cnt(int plex_seat_cnt) {
 		this.plex_seat_cnt = plex_seat_cnt;
 	}
-	
+
 }

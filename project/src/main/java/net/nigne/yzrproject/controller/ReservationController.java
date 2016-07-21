@@ -167,7 +167,7 @@ public class ReservationController {
 			while(plexNumList.size() > plexNumCount){				
 				plexNum[plexNumCount] = plexNumList.get(plexNumCount);
 				System.out.println(plexNum[plexNumCount]);
-				plexTypeList.addAll(plexService.getList(plexNum[plexNumCount]));
+				plexTypeList.addAll(plexService.getList(plexNum[plexNumCount], theaterId));
 				timetableList.addAll(timetableService.getList(movieId, theaterId, date, plexNum[plexNumCount]));
 				while(timetableList.size() > timetableNum){
 					System.out.println("54545454545454545454545454545454545454545454:" + timetableList.get(timetableNum).getStart_time());
