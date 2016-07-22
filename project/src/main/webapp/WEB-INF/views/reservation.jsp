@@ -105,6 +105,15 @@
 		background-color: #980000;
 	}
 	
+	.seat_over{
+		width: 25px;
+		height: 25px;
+		font-size: 2pt;
+		text-align: center;
+		border: 2px solid #999;
+		background-color: #980000;
+	}
+	
 	.seat_empty{
 		width: 25px;
 		height: 25px;
@@ -236,6 +245,7 @@
 		var currentCheckedValue = 0;
 		var radioCheked = 0;
 		var endTime = "";
+		var selectFlag = false;
 		
 		$(document).ready(function() {
 			$("#nomal_defalut").addClass("seat_count_nomal");
@@ -244,186 +254,413 @@
 			//endTimeGenerate("15:00", 180);
 		});
 		
-	
 		$(document).ready(function() {
-			$(".seat_prime").click(function() {
-				$(this).toggleClass("seat_clicked");
-			});
+			
+			//프라임 좌석 선택
+			seat_prime;
+			
+			//스탠다드 좌석 선택
+			seat_standard;
+			
+			//이코노미 좌석 선택
+			seat_economy;
+			
+			//장애인 좌석 선택
+			seat_handicapped;
+			
+			//좌석 선택영역 표시
+			mouseover;		
+			mouseout;
+			
+			//일반 좌석 수
+			nomal_count;
+			
+			//청소년 좌석 수
+			youth_count;
+			
+			//우대 좌석 수
+			advantage_count;
+			
+			//좌석형태 함수
+			seatNum;
+			
 		});
-		
-		$(document).ready(function() {
-			$(".seat_standard").click(function() {
-				$(this).toggleClass("seat_clicked");
-			});
 
-			$(".seat_standard, .seat_prime, .seat_economy").mouseover(function() {
-				if(currentCheckedValue == 1){
-					$(this).addClass("seat_clicked");
-				} else if(currentCheckedValue == 2){
-					$(this).addClass("seat_clicked");
-					if($(this).next().hasClass("seat_empty") === true){
-						$(this).prev().addClass("seat_clicked");
-					} else {
-						$(this).next().addClass("seat_clicked");
-					}
-					
-					
-				} else if(currentCheckedValue == 3){
-					$(this).addClass("seat_clicked");
-					$(this).next().addClass("seat_clicked");
-					$(this).next().next().addClass("seat_clicked");
-				} else if(currentCheckedValue == 4){
-					$(this).addClass("seat_clicked");
-					$(this).next().addClass("seat_clicked");
-					$(this).next().next().addClass("seat_clicked");
-					$(this).next().next().next().addClass("seat_clicked");
-				}
-			});
+		var seat_prime = $(".seat_prime").click(function() {
 			
-			$(".seat_standard, .seat_prime, .seat_economy").mouseout(function() {
-				if(currentCheckedValue == 1){
-					$(this).removeClass("seat_clicked");
-				} else if(currentCheckedValue == 2){
-					$(this).removeClass("seat_clicked");
-					if($(this).next().hasClass("seat_empty") === true){
-						$(this).prev().removeClass("seat_clicked");
-					} else {
-						$(this).next().removeClass("seat_clicked");
-					}
-				} else if(currentCheckedValue == 3){
-					$(this).removeClass("seat_clicked");
-					$(this).next().removeClass("seat_clicked");
-					$(this).next().next().removeClass("seat_clicked");
-				} else if(currentCheckedValue == 4){
-					$(this).removeClass("seat_clicked");
-					$(this).next().removeClass("seat_clicked");
-					$(this).next().next().removeClass("seat_clicked");
-					$(this).next().next().next().removeClass("seat_clicked");
-				}
-			});
-		});
-		
-		$(document).ready(function() {
-			$(".seat_handicapped").click(function() {
+			if(currentCheckedValue == 1){
 				$(this).toggleClass("seat_clicked");
-			});
-		});
-		
-		$(document).ready(function() {
-			$(".seat_economy").click(function() {
+				countSum -= currentCheckedValue;
+				seatSelect(1);
+			} else if(currentCheckedValue == 2){
 				$(this).toggleClass("seat_clicked");
-			});
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(2);
+			} else if(currentCheckedValue == 3){
+				$(this).toggleClass("seat_clicked");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(3);
+			} else if(currentCheckedValue == 4){
+				$(this).toggleClass("seat_clicked");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+					$(this).prev().prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).next().next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(4);
+			}
 		});
 		
-		$(document).ready(function() {
+		var seat_standard = $(".seat_standard").click(function() {
 			
-			$(".seat_nomal").click(function() {
-				
-				radioCheked = $('input[name="seat_num"]:checked').length;
-				
-				countSum -=  nomalCount;
-				
-				nomalCount = $(this).text();
-				
-				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
-				
-				if(countSum <= 8){
-					reset("nomal");
-					$(this).toggleClass("seat_count_nomal");
-					if(countSum == 0 && radioCheked == 1){
-						$(this).prop('checked',false);
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
-						currentCheckedValue = 0;
-					} else if(radioCheked == 1 && countSum < currentCheckedValue){
-						currentCheckedValue = countSum;
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
-					}
-				} else{
-					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+			if(currentCheckedValue == 1){
+				$(this).toggleClass("seat_clicked");
+				countSum -= currentCheckedValue;
+				seatSelect(1);
+			} else if(currentCheckedValue == 2){
+				$(this).toggleClass("seat_clicked");
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
 				}
+				countSum -= currentCheckedValue;
+				seatSelect(2);
+			} else if(currentCheckedValue == 3){
+				$(this).toggleClass("seat_clicked");
 				
-			});
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(3);
+			} else if(currentCheckedValue == 4){
+				$(this).toggleClass("seat_clicked");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+					$(this).prev().prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).next().next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(4);
+			}
 		});
 		
-		$(document).ready(function() {
+		var seat_economy =  $(".seat_economy").click(function() {
 			
-			$(".seat_youth").click(function() {
-				
-				radioCheked = $('input[name="seat_num"]:checked').length;
-				
-				countSum -=  youthCount;
-				
-				youthCount = $(this).text();
-				
-				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
-				
-				if(countSum <= 8){
-					reset("youth");
-					$(this).toggleClass("seat_count_youth");
-					
-					if(countSum == 0 && radioCheked == 1){
-						$(this).prop('checked',false);
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
-						currentCheckedValue = 0;
-					} else if(radioCheked == 1 && countSum < currentCheckedValue){
-						currentCheckedValue = countSum;
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
-					}
-				} else{
-					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+			if(currentCheckedValue == 1){
+				$(this).toggleClass("seat_clicked");
+				countSum -= currentCheckedValue;
+				seatSelect(1);
+			} else if(currentCheckedValue == 2){
+				$(this).toggleClass("seat_clicked");
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
 				}
+				countSum -= currentCheckedValue;
+				seatSelect(2);
+			} else if(currentCheckedValue == 3){
+				$(this).toggleClass("seat_clicked");
 				
-			});
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(3);
+			} else if(currentCheckedValue == 4){
+				$(this).toggleClass("seat_clicked");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+					$(this).prev().prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+					$(this).prev().prev().toggleClass("seat_clicked");
+				} else if($(this).next().next().next().hasClass("seat_empty") === true){
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).prev().toggleClass("seat_clicked");
+				} else {
+					$(this).next().toggleClass("seat_clicked");
+					$(this).next().next().toggleClass("seat_clicked");
+					$(this).next().next().next().toggleClass("seat_clicked");
+				}
+				countSum -= currentCheckedValue;
+				seatSelect(4);
+			}
+		});
+
+		var mouseover = $(".seat_standard, .seat_prime, .seat_economy").mouseover(function() {
+			if(currentCheckedValue == 1){
+				$(this).addClass("seat_over");
+			} else if(currentCheckedValue == 2){
+				$(this).addClass("seat_over");
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().addClass("seat_over");
+				} else {
+					$(this).next().addClass("seat_over");
+				}
+			} else if(currentCheckedValue == 3){
+				$(this).addClass("seat_over");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().addClass("seat_over");
+					$(this).prev().prev().addClass("seat_over");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().addClass("seat_over");
+					$(this).prev().addClass("seat_over");
+				} else {
+					$(this).next().addClass("seat_over");
+					$(this).next().next().addClass("seat_over");
+				}
+			} else if(currentCheckedValue == 4){
+				$(this).addClass("seat_over");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().addClass("seat_over");
+					$(this).prev().prev().addClass("seat_over");
+					$(this).prev().prev().prev().addClass("seat_over");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().addClass("seat_over");
+					$(this).prev().addClass("seat_over");
+					$(this).prev().prev().addClass("seat_over");
+				} else if($(this).next().next().next().hasClass("seat_empty") === true){
+					$(this).next().addClass("seat_over");
+					$(this).next().next().addClass("seat_over");
+					$(this).prev().addClass("seat_over");
+				} else {
+					$(this).next().addClass("seat_over");
+					$(this).next().next().addClass("seat_over");
+					$(this).next().next().next().addClass("seat_over");
+				}					
+			}
 		});
 		
-		$(document).ready(function() {
-			
-			$(".seat_advantage").click(function() {
-				
-				radioCheked = $('input[name="seat_num"]:checked').length;
-				
-				countSum -=  advantageCount;
-				
-				advantageCount = $(this).text();
-				
-				countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
-				
-				if(countSum <= 8){
-					reset("advantage");
-					$(this).toggleClass("seat_count_advantage");
-					if(countSum == 0 && radioCheked == 1){
-						$(this).prop('checked',false);
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
-						currentCheckedValue = 0;
-					} else if(radioCheked == 1 && countSum < currentCheckedValue){
-						currentCheckedValue = countSum;
-						$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
-					}
-				} else{
-					alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+		var mouseout = $(".seat_standard, .seat_prime, .seat_economy").mouseout(function() {
+			if(currentCheckedValue == 1){
+				$(this).removeClass("seat_over");
+			} else if(currentCheckedValue == 2){
+				$(this).removeClass("seat_over");
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().removeClass("seat_over");
+				} else {
+					$(this).next().removeClass("seat_over");
 				}
+			} else if(currentCheckedValue == 3){
+				$(this).removeClass("seat_over");
 				
-			});
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().removeClass("seat_over");
+					$(this).prev().prev().removeClass("seat_over");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().removeClass("seat_over");
+					$(this).prev().removeClass("seat_over");
+				} else {
+					$(this).next().removeClass("seat_over");
+					$(this).next().next().removeClass("seat_over");
+				}
+			} else if(currentCheckedValue == 4){
+				$(this).removeClass("seat_over");
+				
+				if($(this).next().hasClass("seat_empty") === true){
+					$(this).prev().removeClass("seat_over");
+					$(this).prev().prev().removeClass("seat_over");
+					$(this).prev().prev().prev().removeClass("seat_over");
+				} else if($(this).next().next().hasClass("seat_empty") === true){
+					$(this).next().removeClass("seat_over");
+					$(this).prev().removeClass("seat_over");
+					$(this).prev().prev().removeClass("seat_over");
+				} else if($(this).next().next().next().hasClass("seat_empty") === true){
+					$(this).next().removeClass("seat_over");
+					$(this).next().next().removeClass("seat_over");
+					$(this).prev().removeClass("seat_over");
+				} else {
+					$(this).next().removeClass("seat_over");
+					$(this).next().next().removeClass("seat_over");
+					$(this).next().next().next().removeClass("seat_over");
+				}
+			}
+		});
+		
+		var seat_handicapped = $(".seat_handicapped").click(function() {
+			$(this).toggleClass("seat_clicked");
+		});
+		
+		var nomal_count = $(".seat_nomal").click(function() {
+			
+			radioCheked = $('input[name="seat_num"]:checked').length;
+			
+			countSum -=  nomalCount;
+			
+			nomalCount = $(this).text();
+			
+			countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
+			
+			
+			if(countSum <= 8){
+				reset("nomal");
+				$(this).toggleClass("seat_count_nomal");
+				if(countSum == 0 && radioCheked == 1){
+					$(this).prop('checked',false);
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+					currentCheckedValue = 0;
+				} else if(radioCheked == 1 && countSum < currentCheckedValue){
+					currentCheckedValue = countSum;
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+				}
+			} else{
+				alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+			}
+			
+		});
+		
+		var youth_count = $(".seat_youth").click(function() {
+			
+			radioCheked = $('input[name="seat_num"]:checked').length;
+			
+			countSum -=  youthCount;
+			
+			youthCount = $(this).text();
+			
+			countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
+			
+			if(countSum <= 8){
+				reset("youth");
+				$(this).toggleClass("seat_count_youth");
+				
+				if(countSum == 0 && radioCheked == 1){
+					$(this).prop('checked',false);
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+					currentCheckedValue = 0;
+				} else if(radioCheked == 1 && countSum < currentCheckedValue){
+					currentCheckedValue = countSum;
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+				}
+			} else{
+				alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+			}
+			
+		});
+		
+		var advantage_count = $(".seat_advantage").click(function() {
+			
+			radioCheked = $('input[name="seat_num"]:checked').length;
+			
+			countSum -=  advantageCount;
+			
+			advantageCount = $(this).text();
+			
+			countSum = Number(nomalCount) + Number(youthCount) + Number(advantageCount);
+			
+			if(countSum <= 8){
+				reset("advantage");
+				$(this).toggleClass("seat_count_advantage");
+				if(countSum == 0 && radioCheked == 1){
+					$(this).prop('checked',false);
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',false);
+					currentCheckedValue = 0;
+				} else if(radioCheked == 1 && countSum < currentCheckedValue){
+					currentCheckedValue = countSum;
+					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+				}
+			} else{
+				alert("최대 예매 가능한 인원수는 8명 까지 입니다. 단체관람의 경우 단체/대관문의를 이용해주세요.");
+			}
+			
 		});
 		
 		function reset(name) {
 			$(".seat_count_" + name).removeClass("seat_count_" + name);
 		}
-		
-		$(document).ready(function() {
 			
-			var seatNum = $("input[name=seat_num]").click(function() {
-				var value = $(this).val();
-				if(countSum < value){
-					$(this).prop('checked',false);
-					$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
-				} else {
-					$(this).prop('checked',true);
-					currentCheckedValue = $(this).val();
-				}
+		var seatNum = $("input[name=seat_num]").click(function() {
+			var value = $(this).val();
+			
+			if(countSum < value){
+				$(this).prop('checked',false);
+				$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
 				
-			});
+			} else {
+				$(this).prop('checked',true);
+				currentCheckedValue = $(this).val();
+				alert(currentCheckedValue);
+				
+			}
 		});
+		
+		function seatSelect(value){
+			if(countSum < value){
+				currentCheckedValue = countSum;
+				
+				if(currentCheckedValue == 0){
+					selectFlag = true;
+				}
+				$('input[name="seat_num"]:radio[value="'+ value +'"]').prop('checked',false);
+				$('input[name="seat_num"]:radio[value="'+ currentCheckedValue +'"]').prop('checked',true);
+			}
+
+		}
 		
 		function endTimeGenerate(startTime, runtime){
 			var divideTime = startTime.split(":");
