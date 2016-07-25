@@ -30,7 +30,7 @@ font{
 .navbar-default .navbar-nav > .open > a:hover, 
 .navbar-default .navbar-nav > .open > a:focus {
     color:black;
-    background-color:#ffffcc;
+    background-color:#FEF8DC;
 }
 </style>
 <div id="wrapper" class="container">
@@ -40,7 +40,7 @@ font{
 		</div>
 		<nav class="navbar navbar-default" role="navigation" style="border:0px;">
 			<div class="container-fluid" style="padding:0px;">
-				<div class="navbar-header" style="background-color:white; border-bottom:1px solid #000;">
+				<div class="navbar-header" style="background-color:white; border-bottom:5px solid RED;">
 					<ul class="nav navbar-nav navbar-right">				
 						<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
 						<li><a href="#"><span class="glyphicon glyphicon-user"></span> 회원가입</a></li>
@@ -49,17 +49,17 @@ font{
 						<li style="margin-right:20px;"><a href="#"><span class="glyphicon glyphicon-info-sign"></span> 고객센터</a></li>
 					</ul>
 				</div>
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#ffffcc; border-bottom:1px solid #000;">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#FEF8DC; border-bottom:1px solid #000;">
 					<ul class="nav navbar-nav" style="width: 100%; text-align: center;">
 						<li style="float: none; display: inline-block;"><a href="#"></a></li>
 					</ul>
 				</div>
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#ffffcc; border-bottom:1px solid #000;">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#FEF8DC; border-bottom:1px solid #000;">
 					<ul class="nav navbar-nav" style="width: 100%; text-align: center;">
 						<li style="float: none; display: inline-block;"><a href="#"><font style="font-size:20pt; font-weight:bold;">선택한 메뉴</font></a></li>
 					</ul>
 				</div>
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#ffffcc; border-bottom:1px solid #000;">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#FEF8DC; border-bottom:1px solid #000;">
 					<ul class="nav navbar-nav" style="width: 100%; text-align: center;">
 						<li class="dropdown" style="float: none; display: inline-block;">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><font style="font-size:15pt;">영화</font></a>
@@ -87,7 +87,7 @@ font{
 						</li>
 					</ul>
 				</div>
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#ffffcc; border-bottom:1px solid #000;">
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color:#FEF8DC; border-bottom:5px solid RED;">
 					<ul class="nav navbar-nav" style="width: 100%; text-align: center;">
 						<li style="float: none; display: inline-block;"><a href="#"></a></li>
 					</ul>
