@@ -376,6 +376,16 @@
 		cursor:pointer;
 	}
 	
+	.seat_sweetbox{
+		width: 25px;
+		height: 25px;
+		font-size: 2pt;
+		text-align: center;
+		border: 2px solid #FF4500;
+		background-color: #FF007F;
+		cursor:pointer;
+	}
+	
 	.seat_handicapped{
 		width: 25px;
 		height: 25px;
@@ -641,14 +651,10 @@
 			</div>
 			<div id="content1-4" class="content1">
 				<div id="timetable">
-					<div>
-						<span class="glyphicons glyphicons-brightness-increase"></span>
-						<span class="glyphicons glyphicons-moon"></span>
-					</div>
+					
 				</div>
 			</div>
 		</div>
-		
 	</div>
 	
 	<div id="reservation2">
@@ -733,6 +739,8 @@
 				<td colspan="2" style="border-right: 0px solid #999;">
 					<div id="screen">screen</div>
 					<div style="height:50px"><span></span></div>
+					<div id="seat_table"></div>
+					
 					<%@include file="./include/Plex1.html" %>
 				</td>
 				<td style="border-left: 0px solid #999;">
@@ -1104,8 +1112,48 @@
 			frm.start_time.value = time;
 			frm.plex.value = plex;
 			
+			alert("11");
+			getSeat(plex);
+			
 		}
+		
+		function getSeat(plexNum) {
+			alert("@22");
+			$.ajax({
+				type:'get',
+				url:'/yzrproject/main/plex/' + plexNum,
+				headers: {
+					"Content-Type" : "application/json",
+					"X-HTTP-Method-Override" : "GET",
+				},
+				dataType:'json',
+				data : '',
+				success : function(result){
+					alert(result.l);
+					setSeat(result.l, result.i);
+				}
+			});
+		}
+		
+		function setSeat(seat, seatIndex) {
+			//alert("ee");
+			var result = "<table>";
+
+			$(seatIndex).each(function() {
 				
+				result += "<tr>" + "<th class='seat_header'>" + this + "</th>";
+
+				$(seat).each(function() {
+					result += "<td class='" + this.seat_type + "'>" + this.seat_number;	+ "</td>";					
+				});
+					
+				result += "</tr>"
+		
+			});
+			result += "</table>";
+			document.getElementById("seat_table").innerHTML = result;
+		}
+
 		function getTheaterList(page) {
 			
 			if(page == null){
@@ -1208,7 +1256,7 @@
 			//좌석형태 함수
 			seatNum;
 			
-			$("#reservation1").hide();
+			$("#reservation2").hide();
 			
 		});
 

@@ -20,10 +20,12 @@ import net.nigne.yzrproject.domain.EmpVO;
 import net.nigne.yzrproject.domain.MovieVO;
 import net.nigne.yzrproject.domain.PlexVO;
 import net.nigne.yzrproject.domain.Reservation_listVO;
+import net.nigne.yzrproject.domain.SeatVO;
 import net.nigne.yzrproject.domain.TheaterVO;
 import net.nigne.yzrproject.domain.TimetableVO;
 import net.nigne.yzrproject.service.MovieService;
 import net.nigne.yzrproject.service.PlexService;
+import net.nigne.yzrproject.service.SeatService;
 import net.nigne.yzrproject.service.TheaterService;
 import net.nigne.yzrproject.service.TimetableService;
 
@@ -47,6 +49,9 @@ public class ReservationController {
 	
 	@Autowired
 	private TimetableService timetableService;
+	
+	@Autowired
+	private SeatService seatService;
 
 	/** 
 	* @Method Name : home  
@@ -140,9 +145,6 @@ public class ReservationController {
 			@PathVariable("date") String date
 			) {
 		ResponseEntity<Map<String, Object>> entity = null;
-		System.out.println(movie);
-		System.out.println(theater);
-		System.out.println("===================================date = " + date);
 		
 		List<MovieVO> movieList = movieService.getMovieId(movie);
 		List<TheaterVO> theaterList = theaterService .getTheaterId(theater);
@@ -150,8 +152,6 @@ public class ReservationController {
 		
 		String movieId = movieList.get(0).getMovie_id();
 		String theaterId = theaterList.get(0).getTheater_id();
-		System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111"+movieId);
-		System.out.println("2222222222222222222222222222222222222222222222222222222222222222222222"+theaterId);
 		
 		try{
 			List<TimetableVO> timetableList = new ArrayList<>();
@@ -170,8 +170,6 @@ public class ReservationController {
 				plexTypeList.addAll(plexService.getList(plexNum[plexNumCount], theaterId));
 				timetableList.addAll(timetableService.getList(movieId, theaterId, date, plexNum[plexNumCount]));
 				while(timetableList.size() > timetableNum){
-					System.out.println("54545454545454545454545454545454545454545454:" + timetableList.get(timetableNum).getStart_time());
-					System.out.println("==========================================================");
 					timetableNum++;
 				}
 				plexNumCount++;
@@ -180,6 +178,32 @@ public class ReservationController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("l", timetableList);
 			map.put("t", plexTypeList);
+			
+
+			//브라우저로 전송한다
+			entity = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		} catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value = "/main/plex/{plexNum}", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> PlexPage(
+			@PathVariable("plexNum") String plexNum
+			) {
+		ResponseEntity<Map<String, Object>> entity = null;
+		System.out.println(plexNum);
+		
+		try{
+			List<SeatVO> list = seatService.getList(plexNum);
+			List<SeatVO> getIndex = seatService.getIndex(plexNum);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("l", list);
+			map.put("i", getIndex);
 			
 
 			//브라우저로 전송한다
