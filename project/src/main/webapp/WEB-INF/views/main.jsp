@@ -333,7 +333,7 @@
 		border: 1px solid #000;
 	}
 	
-	#seat{
+	#seat_table>table ,#seat{
 		margin: 0px auto;
 	}
 	
@@ -396,12 +396,12 @@
 		cursor:pointer;
 	}
 	
-	.seat_nonselect{
+	.seat_reservation{
 		width: 25px;
 		height: 25px;
 		font-size: 2pt;
-		text-align: center;
-		border: 0px solid #FF4500;
+		text-align: center;border: 2px0solid #FF4500;
+		
 		background-color: #C2C2C2;
 		cursor:pointer;
 	}
@@ -740,8 +740,6 @@
 					<div id="screen">screen</div>
 					<div style="height:50px"><span></span></div>
 					<div id="seat_table"></div>
-					
-					<%@include file="./include/Plex1.html" %>
 				</td>
 				<td style="border-left: 0px solid #999;">
 					<div id="selected"></div><div>선택</div><br>
@@ -770,7 +768,7 @@
 			> 좌석선택 > 결제
 		</div>
 		<div id="nextArea1"><button id="nextBtn1" onclick="nextStep();"><span>></span><br/>좌석선택</button></div>
-		<div id="nextArea2"><button id="nextBtn2" onclick=""><span>></span><br/>결제선택</button></div>
+		<div id="nextArea2"><button id="nextBtn2" onclick="lastStep()"><span>></span><br/>결제선택</button></div>
 	</div>
 	
 	<form id="frm" name="frm" method="post" action="/yzrproject/reservation">
@@ -782,6 +780,14 @@
 		<input type="text" id="start_time" name="start_time" size="50" maxlength="100" style="display:none;">
 		<input type="text" id="plex" name="plex" size="50" maxlength="100" style="display:none;">
 		<input type="text" id="seat_cnt" name="seat_cnt" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat1" name="seat1" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat2" name="seat2" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat3" name="seat3" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat4" name="seat4" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat5" name="seat5" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat6" name="seat6" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat7" name="seat7" size="50" maxlength="100" style="display:none;">
+		<input type="text" id="seat8" name="seat8" size="50" maxlength="100" style="display:none;">
 	</form>
 	
 	<script>
@@ -794,6 +800,7 @@
 		var theaterId = ""
 		var reservationCode = "";
 		var plexNum = "";
+		var seat_count = 0;
 		
 		function backStep(){
 			$("#reservation1").show();
@@ -813,13 +820,7 @@
 			if(frm.plex.value == "" || frm.plex.value == null) {
 				alert("시간을 선택해 주세요");	
 			} else {
-//				alert(frm.movie.value);
-//				alert(frm.theater.value);
-//				alert(frm.years.value);
-//				alert(frm.months.value);
-//				alert(frm.dates.value);
-//				alert(frm.start_time.value);
-//				alert(frm.plex.value);
+
 				$("#reservation1").hide();
 				$("#reservation2").show();
 				$("#backArea").show();
@@ -830,10 +831,43 @@
 				$("#seat_totcnt").text(" (총  " + frm.seat_cnt.value + " 석 )");
 				reservationCode = $("#years").val() + $("#months").val() 
 								+ $("#dates").val() + movieId + theaterId + frm.plex.value;
-//				alert(reservationCode);
-				//frm.submit();
+
 			}
-		}	
+		}
+		
+		function lastStep() {
+			plexNum = frm.plex.value;
+			seat1 = frm.seat1.value;
+			seat2 = frm.seat2.value;
+			seat3 = frm.seat3.value;
+			seat4 = frm.seat4.value;
+			seat5 = frm.seat5.value;
+			seat6 = frm.seat6.value;
+			seat7 = frm.seat7.value;
+			seat8 = frm.seat8.value;
+			
+			alert(theaterId);
+			alert(plexNum);
+			
+			
+			
+			$.ajax({
+				type:'get',
+				url:'/yzrproject/main/' + theaterId +'/' + plexNum + '/seat',
+				headers: {
+					"Content-Type" : "application/json",
+				},
+				dataType:'json',
+				data : {"seat1":seat1, "seat2":seat2, "seat3":seat3, "seat4":seat4, "seat5":seat5, "seat6":seat6, "seat7":seat7, "seat8":seat8},
+				success : function(result){
+					alert(result);
+					alert(result.l);
+					alert(result.i);
+					setSeat(result.l, result.i);
+				}
+			});
+			
+		}
 	
 		$(document).ready(function() {
 			$("#movie_menu1").click(function(){
@@ -1040,8 +1074,7 @@
 			if(page == null){
 				page = currentMoviePage;
 			}
-			//alert(page);
-			
+						
 			$.ajax({
 				type:'get',
 				url:'/yzrproject/main/movie/' + page,
@@ -1052,7 +1085,6 @@
 				dataType:'json',
 				data : '',
 				success : function(result){
-					//alert(result.l);
 					setMovieList(result.l);
 				}
 			});
@@ -1072,11 +1104,9 @@
 		}
 		
 		function setTimetableList(time, plex) {
-			//alert("ee");
 			var result = "";
 			var number = 1;
 			if(time == "" || plex == ""){
-				//alert("dddddd");
 				result += '<div></div>';
 				document.getElementById("timetable").innerHTML = result;
 			}else {
@@ -1086,7 +1116,6 @@
 						+ '<span style="color: #993800; font-weight: bold">'
 						+ this.plex_type + '</span> <span style="font-weight: bold;">' + this.plex_number + '관 </span> (총 '
 						+ this.plex_seat_cnt + '석)</div>';
-					//alert(this.plex_number);
 					seat_tot_num(this.plex_seat_cnt);
 					
 						$(time).each(function() {
@@ -1111,14 +1140,12 @@
 				
 			frm.start_time.value = time;
 			frm.plex.value = plex;
-			
-			alert("11");
+
 			getSeat(plex);
 			
 		}
 		
 		function getSeat(plexNum) {
-			alert("@22");
 			$.ajax({
 				type:'get',
 				url:'/yzrproject/main/plex/' + plexNum,
@@ -1129,29 +1156,52 @@
 				dataType:'json',
 				data : '',
 				success : function(result){
-					alert(result.l);
 					setSeat(result.l, result.i);
 				}
 			});
 		}
 		
 		function setSeat(seat, seatIndex) {
-			//alert("ee");
 			var result = "<table>";
+			var header_index = "";
+			var seat_index = "";
+			alert("123142143");
 
 			$(seatIndex).each(function() {
-				
+			
 				result += "<tr>" + "<th class='seat_header'>" + this + "</th>";
-
+								
+				header_index = this;
+				
 				$(seat).each(function() {
-					result += "<td class='" + this.seat_type + "'>" + this.seat_number;	+ "</td>";					
-				});
+					seat_index = this.seat_index;
 					
+					if(header_index == seat_index) {
+						
+						if (this.seat_type == 'empty'){
+							result += "<td class='seat_" + this.seat_type + " seat_nonselect'>" + this.seat_number+ "</td>";
+						} else if(this.reservation_exist == '1') {
+							result += "<td class='seat_reservation seat_nonselect'>" + this.seat_number+ "</td>";
+						} else if(this.reservation_exist == '0') {
+							result += "<td class='seat_" + this.seat_type + "'>" + this.seat_number+ "</td>";
+						}
+					}
+				});
 				result += "</tr>"
 		
 			});
 			result += "</table>";
 			document.getElementById("seat_table").innerHTML = result;
+			
+			$(".seat_empty").text("");
+			
+			// 좌석 선택
+			seatClick();
+			
+			//좌석 선택영역 표시
+			mouseover();		
+			mouseout();
+			
 		}
 
 		function getTheaterList(page) {
@@ -1159,7 +1209,6 @@
 			if(page == null){
 				page = currentTheaterPage;
 			}
-			//alert(page);
 			
 			$.ajax({
 				type:'get',
@@ -1171,7 +1220,6 @@
 				dataType:'json',
 				data : '',
 				success : function(result){
-					//alert(result.l);
 					setTheaterList(result.l);
 				}
 			});
@@ -1193,7 +1241,6 @@
 		getMovieList("reservation_rate");
 		
 		function getTimetable(movie, theater, date) {
-			//alert(date);
 			$.ajax({
 				type:'get',
 				url:'/yzrproject/main/timetable/' + movie + '/' + theater + '/' + date,
@@ -1204,7 +1251,6 @@
 				dataType:'json',
 				data : '',
 				success : function(result){
-					//alert(result.l);
 					setTimetableList(result.l,result.t);
 				}
 			});
@@ -1218,31 +1264,33 @@
 		var radioCheked = 0;
 		var endTime = "";
 		var selectFlag = 0;
+		var seat_row = "";
+		var seat_col = "";
+		var seat1 = "";
+		var seat2 = "";
+		var seat3 = "";
+		var seat4 = "";
+		var seat5 = "";
+		var seat6 = "";
+		var seat7 = "";
+		var seat8 = "";
+		var seat = "";
+		
 		
 		$(document).ready(function() {
 			$("#nomal_defalut").addClass("seat_count_nomal");
 			$("#youth_defalut").addClass("seat_count_youth");
 			$("#advantage_defalut").addClass("seat_count_advantage");
-			//endTimeGenerate("15:00", 180);
 		});
 		
 		$(document).ready(function() {
 			
-			//프라임 좌석 선택
-			seat_prime;
-			
-			//스탠다드 좌석 선택
-			seat_standard;
-			
-			//이코노미 좌석 선택
-			seat_economy;
-			
-			//장애인 좌석 선택
-			seat_handicapped;
+			// 좌석 선택
+			seatClick();
 			
 			//좌석 선택영역 표시
-			mouseover;		
-			mouseout;
+			mouseover();		
+			mouseout();
 			
 			//일반 좌석 수
 			nomal_count;
@@ -1253,435 +1301,1063 @@
 			//우대 좌석 수
 			advantage_count;
 			
-			//좌석형태 함수
+			//좌석형태 함수 ㅁ, ㅁㅁ, ㅁㅁㅁ, ㅁㅁㅁㅁ
 			seatNum;
 			
 			$("#reservation2").hide();
 			
 		});
 
-		var seat_prime = $(".seat_prime").click(function() {
+		function seatClick() {
 			
-			if(currentCheckedValue == 1){
-				$(this).toggleClass("seat_clicked");
-				countSum -= currentCheckedValue;
-				seatSelect(1);
-			} else if(currentCheckedValue == 2){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true ||
-				   $(this).next().hasClass("seat_clicked") === true ||
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");					
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(2);
-			} else if(currentCheckedValue == 3){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true ||
-				   $(this).next().hasClass("seat_clicked") === true ||
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(3);
-			} else if(currentCheckedValue == 4){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true ||
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					$(this).prev().prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).next().next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(4);
-			}
-		});
-		
-		var seat_standard = $(".seat_standard").click(function() {
-			
-			if(currentCheckedValue == 1){
-				$(this).toggleClass("seat_clicked");
-				countSum -= currentCheckedValue;
-				seatSelect(1);
-			} else if(currentCheckedValue == 2){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(2);
-			} else if(currentCheckedValue == 3){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(3);
-			} else if(currentCheckedValue == 4){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					$(this).prev().prev().prev().toggleClass("seat_clicked");
-				} 
-				else if($(this).next().next().hasClass("seat_empty") === true || 
-						$(this).next().next().hasClass("seat_clicked") === true || 
-						$(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).next().next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(4);
-			}
-		});
-		
-		var seat_economy =  $(".seat_economy").click(function() {
-			
-			if(currentCheckedValue == 1){
-				$(this).toggleClass("seat_clicked");
-				countSum -= currentCheckedValue;
-				seatSelect(1);
-			} else if(currentCheckedValue == 2){
-				$(this).toggleClass("seat_clicked");
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true ||
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(2);
-			} else if(currentCheckedValue == 3){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true ||
-				   $(this).next().hasClass("seat_clicked") === true ||
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true ||
-						  $(this).next().next().hasClass("seat_clicked") === true ||
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(3);
-			} else if(currentCheckedValue == 4){
-				$(this).toggleClass("seat_clicked");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					$(this).prev().prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					$(this).prev().prev().toggleClass("seat_clicked");
-					
-				} else if($(this).next().next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).prev().toggleClass("seat_clicked");
-					
-				} else {
-					$(this).next().toggleClass("seat_clicked");
-					$(this).next().next().toggleClass("seat_clicked");
-					$(this).next().next().next().toggleClass("seat_clicked");
-				}
-				countSum -= currentCheckedValue;
-				seatSelect(4);
-			}
-		});
+			$(".seat_standard, .seat_prime, .seat_economy, .seat_handicapped").click(function() {
 
-		var mouseover = $(".seat_standard, .seat_prime, .seat_economy").mouseover(function() {
-			
-			if($(this).hasClass("seat_clicked") !== true) {
-				
-				if(currentCheckedValue == 1){
-					$(this).addClass("seat_over");
-				} else if(currentCheckedValue == 2){
-					if(($(this).next().hasClass("seat_clicked") !== true || $(this).prev().hasClass("seat_clicked") !== true) && 
-					   ($(this).next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).prev().hasClass("seat_empty") !== true || $(this).next().hasClass("seat_clicked") !== true) && 
-					   ($(this).prev().hasClass("seat_empty") !== true || $(this).next().hasClass("seat_nonselect") !== true) && 
-					   ($(this).next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_nonselect") !== true) &&
-					   ($(this).next().hasClass("seat_nonselect") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).prev().hasClass("seat_nonselect") !== true || $(this).next().hasClass("seat_clicked") !== true))
-					{
-						$(this).addClass("seat_over");
-						if($(this).next().hasClass("seat_empty") === true ||
-						   $(this).next().hasClass("seat_clicked") === true || 
-						   $(this).next().hasClass("seat_nonselect") === true)
+				if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked")) {
+
+					if(currentCheckedValue == 1){
+						
+						$(this).removeClass("seat_clicked");
+						$(this).removeClass("seat_nonselect");
+
+						seat_row = $(this).parent().children("th").text();
+						seat_col = $(this).text();
+						seat = seat_row + seat_col;
+						
+						for(var i = 1; i <=8; i++){
+							if($('#seat' + i).val() == seat){
+								$('#seat' + i).val("");
+							}
+						}
+						countSum += currentCheckedValue;
+						seat_count -= 1;
+						
+					} else if(currentCheckedValue == 2) {
+						
+						if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+						   $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked"))
 						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked"))
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+						}
+						
+						countSum += currentCheckedValue;
+						seat_count -= 2;
+						
+					} else if(currentCheckedValue == 3) {
+						if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+						   $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked") &&
+						   $(this).next().next().hasClass("seat_nonselect") && $(this).next().next().hasClass("seat_clicked"))
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							$(this).next().next().removeClass("seat_clicked");
+							$(this).next().next().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked") &&
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked")) 
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked") &&
+								  $(this).prev().prev().hasClass("seat_nonselect") && $(this).prev().prev().hasClass("seat_clicked"))
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							$(this).prev().prev().removeClass("seat_clicked");
+							$(this).prev().prev().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+						}
+						
+						countSum += currentCheckedValue;
+						seat_count -= 3;
+						
+					} else if(currentCheckedValue == 4) {
+						if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+						   $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked") &&
+						   $(this).next().next().hasClass("seat_nonselect") && $(this).next().next().hasClass("seat_clicked") && 
+						   $(this).next().next().next().hasClass("seat_nonselect") && $(this).next().next().next().hasClass("seat_clicked"))
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							$(this).next().next().removeClass("seat_clicked");
+							$(this).next().next().removeClass("seat_nonselect");
+							$(this).next().next().next().removeClass("seat_clicked");
+							$(this).next().next().next().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().next().next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked") &&
+								  $(this).next().next().hasClass("seat_nonselect") && $(this).next().next().hasClass("seat_clicked") && 
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked")) 
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							$(this).next().next().removeClass("seat_clicked");
+							$(this).next().next().removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).next().next().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).next().hasClass("seat_nonselect") && $(this).next().hasClass("seat_clicked") &&
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked") && 
+								  $(this).prev().prev().hasClass("seat_nonselect") && $(this).prev().prev().hasClass("seat_clicked")) 
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).next().removeClass("seat_clicked");
+							$(this).next().removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							$(this).prev().prev().removeClass("seat_clicked");
+							$(this).prev().prev().removeClass("seat_nonselect");
+							
+						} else if($(this).hasClass("seat_nonselect") && $(this).hasClass("seat_clicked") &&
+								  $(this).prev().hasClass("seat_nonselect") && $(this).prev().hasClass("seat_clicked") && 
+								  $(this).prev().prev().hasClass("seat_nonselect") && $(this).prev().prev().hasClass("seat_clicked") &&
+								  $(this).prev().prev().prev().hasClass("seat_nonselect") && $(this).prev().prev().prev().hasClass("seat_clicked")) 
+						{
+							$(this).removeClass("seat_clicked");
+							$(this).removeClass("seat_nonselect");
+							$(this).prev().removeClass("seat_clicked");
+							$(this).prev().removeClass("seat_nonselect");
+							$(this).prev().prev().removeClass("seat_clicked");
+							$(this).prev().prev().removeClass("seat_nonselect");
+							$(this).prev().prev().prev().removeClass("seat_clicked");
+							$(this).prev().prev().prev().removeClass("seat_nonselect");
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+							seat_row = $(this).parent().children("th").text();
+							seat_col = $(this).prev().prev().prev().text();
+							seat = seat_row + seat_col;
+							
+							for(var i = 1; i <=8; i++){
+								if($('#seat' + i).val() == seat){
+									$('#seat' + i).val("");
+								}
+							}
+							
+						}
+						countSum += currentCheckedValue;
+						seat_count -= 4;
+					}
+				} else if(!$(this).hasClass("seat_nonselect")) {
+					
+					if(currentCheckedValue == 1){
+						
+						$(this).addClass("seat_clicked");
+						$(this).addClass("seat_nonselect");
+
+						for(var i=1; i <=8; i++ ){
+							if($('#seat' + i).val() == ""){
+								
+								seat_row = $(this).parent().children("th").text();
+								seat_col = $(this).text();
+								$('#seat' + i).val(seat_row + seat_col);
+								break;
+							}
+						}
+						
+						countSum -= currentCheckedValue;
+						alert("seat1 : " + $('#seat1').val());
+						alert("seat2 : " + $('#seat2').val());
+						alert("seat3 : " + $('#seat3').val());
+						alert("seat4 : " + $('#seat4').val());
+						alert("seat5 : " + $('#seat5').val());
+						alert("seat6 : " + $('#seat6').val());
+						alert("seat7 : " + $('#seat7').val());
+						alert("seat8 : " + $('#seat8').val());
+						seatSelect(1);
+						
+					} else if(currentCheckedValue == 2) {
+						
+						if($(this).next().hasClass("seat_nonselect") &&
+						   !($(this).prev().hasClass("seat_nonselect"))) 
+						{
+							$(this).addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  $(this).prev().hasClass("seat_nonselect"))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+
+						} else if(!($(this).next().hasClass("seat_nonselect"))){
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+						}
+						
+						countSum -= currentCheckedValue;
+						alert("seat1 : " + $('#seat1').val());
+						alert("seat2 : " + $('#seat2').val());
+						alert("seat3 : " + $('#seat3').val());
+						alert("seat4 : " + $('#seat4').val());
+						alert("seat5 : " + $('#seat5').val());
+						alert("seat6 : " + $('#seat6').val());
+						alert("seat7 : " + $('#seat7').val());
+						alert("seat8 : " + $('#seat8').val());
+						seatSelect(2);
+	
+					} else if(currentCheckedValue == 3){
+						
+						if($(this).next().hasClass("seat_nonselect") && 
+						   !($(this).prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).prev().prev().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							$(this).prev().prev().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+						} else if($(this).next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							
+
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).next().next().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							$(this).next().next().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+
+						}
+						
+						countSum -= currentCheckedValue;
+						alert("seat1 : " + $('#seat1').val());
+						alert("seat2 : " + $('#seat2').val());
+						alert("seat3 : " + $('#seat3').val());
+						alert("seat4 : " + $('#seat4').val());
+						alert("seat5 : " + $('#seat5').val());
+						alert("seat6 : " + $('#seat6').val());
+						alert("seat7 : " + $('#seat7').val());
+						alert("seat8 : " + $('#seat8').val());
+						seatSelect(3);
+						
+					} else if(currentCheckedValue == 4){
+						
+						if($(this).next().hasClass("seat_nonselect") && 
+						   !($(this).prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).prev().prev().addClass("seat_clicked");
+							$(this).prev().prev().prev().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							$(this).prev().prev().addClass("seat_nonselect");
+							$(this).prev().prev().prev().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().prev().prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+						} else if($(this).next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect")) && 
+								  !($(this).prev().prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).prev().prev().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							$(this).prev().prev().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									sseat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+						} else if($(this).next().next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect"))) 
+						{
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).next().next().addClass("seat_clicked");
+							$(this).prev().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							$(this).next().next().addClass("seat_nonselect");
+							$(this).prev().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).prev().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().next().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_clicked");
+							$(this).next().addClass("seat_clicked");
+							$(this).next().next().addClass("seat_clicked");
+							$(this).next().next().next().addClass("seat_clicked");
+							$(this).addClass("seat_nonselect");
+							$(this).next().addClass("seat_nonselect");
+							$(this).next().next().addClass("seat_nonselect");
+							$(this).next().next().next().addClass("seat_nonselect");
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+							
+							for(var i=1; i <=8; i++ ){
+								if($('#seat' + i).val() == ""){
+									
+									seat_row = $(this).parent().children("th").text();
+									seat_col = $(this).next().next().next().text();
+									$('#seat' + i).val(seat_row + seat_col);
+									break;
+								}
+							}
+
+						}
+						
+						countSum -= currentCheckedValue;
+						alert("seat1 : " + $('#seat1').val());
+						alert("seat2 : " + $('#seat2').val());
+						alert("seat3 : " + $('#seat3').val());
+						alert("seat4 : " + $('#seat4').val());
+						alert("seat5 : " + $('#seat5').val());
+						alert("seat6 : " + $('#seat6').val());
+						alert("seat7 : " + $('#seat7').val());
+						alert("seat8 : " + $('#seat8').val());
+						seatSelect(4);
+					}
+				}
+			});
+		}
+
+		function mouseover() {
+			$(".seat_standard, .seat_prime, .seat_economy").mouseover(function() {
+			
+				if(!($(this).hasClass("seat_nonselect"))) {
+					
+					if(currentCheckedValue == 1){
+						
+						$(this).addClass("seat_over");
+						
+					} else if(currentCheckedValue == 2){
+						
+						if($(this).next().hasClass("seat_nonselect") &&
+						   !($(this).prev().hasClass("seat_nonselect"))) 
+						{
+							$(this).addClass("seat_over");
 							$(this).prev().addClass("seat_over");
 							
-						} else {
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  $(this).prev().hasClass("seat_nonselect"))
+						{
+							$(this).addClass("seat_over");
+							$(this).next().addClass("seat_over");
+							
+						} else if(!($(this).next().hasClass("seat_nonselect"))){
+							$(this).addClass("seat_over");
 							$(this).next().addClass("seat_over");
 						}
-					} 
-
-				} else if(currentCheckedValue == 3){
-					
-					if(($(this).next().hasClass("seat_clicked") !== true || $(this).prev().hasClass("seat_clicked") !== true) && 
-					   ($(this).next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).prev().hasClass("seat_empty") !== true || $(this).next().hasClass("seat_clicked") !== true) && 
-					   ($(this).prev().hasClass("seat_empty") !== true || $(this).next().hasClass("seat_nonselect") !== true) && 
-					   ($(this).next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_nonselect") !== true) &&
-					   ($(this).next().hasClass("seat_nonselect") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).prev().hasClass("seat_nonselect") !== true || $(this).next().hasClass("seat_clicked") !== true)
+	
+					} else if(currentCheckedValue == 3){
 						
-						&&
-					   ($(this).next().next().hasClass("seat_clicked") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).next().hasClass("seat_clicked") !== true || $(this).prev().prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).next().next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).next().hasClass("seat_clicked") !== true || $(this).prev().prev().hasClass("seat_empty") !== true) &&
-					   ($(this).next().next().hasClass("seat_empty") !== true || $(this).prev().hasClass("seat_nonselect") !== true) &&
-					   ($(this).next().hasClass("seat_nonselect") !== true || $(this).prev().prev().hasClass("seat_empty") !== true) &&
-					   ($(this).next().next().hasClass("seat_nonselect") !== true || $(this).prev().hasClass("seat_clicked") !== true) &&
-					   ($(this).next().hasClass("seat_clicked") !== true || $(this).prev().prev().hasClass("seat_nonselect") !== true))
-						
-					{
-						$(this).addClass("seat_over");
-						
-						if($(this).next().hasClass("seat_empty") === true || 
-						   $(this).next().hasClass("seat_clicked") === true || 
-						   $(this).next().hasClass("seat_nonselect") === true)
+						if($(this).next().hasClass("seat_nonselect") && 
+						   !($(this).prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().hasClass("seat_nonselect")))
 						{
+							$(this).addClass("seat_over");
 							$(this).prev().addClass("seat_over");
 							$(this).prev().prev().addClass("seat_over");
 							
-						} else if($(this).next().next().hasClass("seat_empty") === true || 
-								  $(this).next().next().hasClass("seat_clicked") === true || 
-								  $(this).next().next().hasClass("seat_nonselect") === true)
+						} else if($(this).next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect")))
 						{
-							$(this).next().addClass("seat_over");
+							$(this).addClass("seat_over");
 							$(this).prev().addClass("seat_over");
+							$(this).next().addClass("seat_over");
 							
-						} else {
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_over");
 							$(this).next().addClass("seat_over");
 							$(this).next().next().addClass("seat_over");
+							
+						}
+						
+					} else if(currentCheckedValue == 4){
+						
+						if($(this).next().hasClass("seat_nonselect") && 
+						   !($(this).prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().hasClass("seat_nonselect")) && 
+						   !($(this).prev().prev().prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_over");
+							$(this).prev().addClass("seat_over");
+							$(this).prev().prev().addClass("seat_over");
+							$(this).prev().prev().prev().addClass("seat_over");
+							
+						} else if($(this).next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect")) && 
+								  !($(this).prev().prev().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_over");
+							$(this).next().addClass("seat_over");
+							$(this).prev().addClass("seat_over");
+							$(this).prev().prev().addClass("seat_over");
+							
+						} else if($(this).next().next().next().hasClass("seat_nonselect") && 
+								  !($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")) && 
+								  !($(this).prev().hasClass("seat_nonselect"))) 
+						{
+							$(this).addClass("seat_over");
+							$(this).next().addClass("seat_over");
+							$(this).next().next().addClass("seat_over");
+							$(this).prev().addClass("seat_over");
+							
+						} else if(!($(this).next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().hasClass("seat_nonselect")) && 
+								  !($(this).next().next().next().hasClass("seat_nonselect")))
+						{
+							$(this).addClass("seat_over");
+							$(this).next().addClass("seat_over");
+							$(this).next().next().addClass("seat_over");
+							$(this).next().next().next().addClass("seat_over");
+							
+						}	
 					}
+				} 
+			});
+		}
+		
+		function mouseout() {
+			$(".seat_standard, .seat_prime, .seat_economy").mouseout(function() {
+		
+				if(currentCheckedValue == 1){
 					
-
+					$(this).removeClass("seat_over");
 					
-					}
-				} else if(currentCheckedValue == 4){
-					$(this).addClass("seat_over");
+				} else if(currentCheckedValue == 2){
 					
-					if($(this).next().hasClass("seat_empty") === true || 
-					   $(this).next().hasClass("seat_clicked") === true || 
-					   $(this).next().hasClass("seat_nonselect") === true)
-					{
-						$(this).prev().addClass("seat_over");
-						$(this).prev().prev().addClass("seat_over");
-						$(this).prev().prev().prev().addClass("seat_over");
-						
-					} else if($(this).next().next().hasClass("seat_empty") === true || 
-							  $(this).next().next().hasClass("seat_clicked") === true || 
-							  $(this).next().next().hasClass("seat_nonselect") === true)
-					{
-						$(this).next().addClass("seat_over");
-						$(this).prev().addClass("seat_over");
-						$(this).prev().prev().addClass("seat_over");
-						
-					} else if($(this).next().next().next().hasClass("seat_empty") === true || 
-							  $(this).next().next().next().hasClass("seat_clicked") === true || 
-							  $(this).next().next().next().hasClass("seat_nonselect") === true)
-					{
-						$(this).next().addClass("seat_over");
-						$(this).next().next().addClass("seat_over");
-						$(this).prev().addClass("seat_over");
-						
+					$(this).removeClass("seat_over");
+					
+					if($(this).next().hasClass("seat_nonselect")) {
+						$(this).prev().removeClass("seat_over");
 					} else {
-						$(this).next().addClass("seat_over");
-						$(this).next().next().addClass("seat_over");
-						$(this).next().next().next().addClass("seat_over");
-					}					
+						$(this).next().removeClass("seat_over");
+					}
+					
+				} else if(currentCheckedValue == 3){
+					
+					$(this).removeClass("seat_over");
+					
+					if($(this).next().hasClass("seat_nonselect")) {
+						$(this).prev().removeClass("seat_over");
+						$(this).prev().prev().removeClass("seat_over");
+						
+					} else if($(this).next().next().hasClass("seat_nonselect")) {
+						$(this).next().removeClass("seat_over");
+						$(this).prev().removeClass("seat_over");
+					} else {
+						$(this).next().removeClass("seat_over");
+						$(this).next().next().removeClass("seat_over");
+					}
+					
+				} else if(currentCheckedValue == 4){
+					$(this).removeClass("seat_over");
+					
+					if($(this).next().hasClass("seat_nonselect")) {
+						$(this).prev().removeClass("seat_over");
+						$(this).prev().prev().removeClass("seat_over");
+						$(this).prev().prev().prev().removeClass("seat_over");	
+					} else if($(this).next().next().hasClass("seat_nonselect")) {
+						$(this).next().removeClass("seat_over");
+						$(this).prev().removeClass("seat_over");
+						$(this).prev().prev().removeClass("seat_over");
+					} else if($(this).next().next().next().hasClass("seat_nonselect")) {
+						$(this).next().removeClass("seat_over");
+						$(this).next().next().removeClass("seat_over");
+						$(this).prev().removeClass("seat_over");
+					} else {
+						$(this).next().removeClass("seat_over");
+						$(this).next().next().removeClass("seat_over");
+						$(this).next().next().next().removeClass("seat_over");
+					}
 				}
-				
-			} 
-			
-		});
+			});
+		}
 		
-		var mouseout = $(".seat_standard, .seat_prime, .seat_economy").mouseout(function() {
-			if(currentCheckedValue == 1){
-				$(this).removeClass("seat_over");
-				
-			} else if(currentCheckedValue == 2){
-				$(this).removeClass("seat_over");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().removeClass("seat_over");
-				} else {
-					$(this).next().removeClass("seat_over");
-				}
-			} else if(currentCheckedValue == 3){
-				$(this).removeClass("seat_over");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().removeClass("seat_over");
-					$(this).prev().prev().removeClass("seat_over");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().removeClass("seat_over");
-					$(this).prev().removeClass("seat_over");
-					
-				} else {
-					$(this).next().removeClass("seat_over");
-					$(this).next().next().removeClass("seat_over");
-				}
-			} else if(currentCheckedValue == 4){
-				$(this).removeClass("seat_over");
-				
-				if($(this).next().hasClass("seat_empty") === true || 
-				   $(this).next().hasClass("seat_clicked") === true || 
-				   $(this).next().hasClass("seat_nonselect") === true)
-				{
-					$(this).prev().removeClass("seat_over");
-					$(this).prev().prev().removeClass("seat_over");
-					$(this).prev().prev().prev().removeClass("seat_over");
-					
-				} else if($(this).next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().removeClass("seat_over");
-					$(this).prev().removeClass("seat_over");
-					$(this).prev().prev().removeClass("seat_over");
-					
-				} else if($(this).next().next().next().hasClass("seat_empty") === true || 
-						  $(this).next().next().next().hasClass("seat_clicked") === true || 
-						  $(this).next().next().next().hasClass("seat_nonselect") === true)
-				{
-					$(this).next().removeClass("seat_over");
-					$(this).next().next().removeClass("seat_over");
-					$(this).prev().removeClass("seat_over");
-					
-				} else {
-					$(this).next().removeClass("seat_over");
-					$(this).next().next().removeClass("seat_over");
-					$(this).next().next().next().removeClass("seat_over");
-				}
-			}
-		});
-		
-		var seat_handicapped = $(".seat_handicapped").click(function() {
-			$(this).toggleClass("seat_clicked");
-		});
 		
 		var nomal_count = $(".seat_nomal").click(function() {
 			

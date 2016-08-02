@@ -1,7 +1,5 @@
 package net.nigne.yzrproject.domain;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,6 +22,8 @@ public class SeatVO {
 	int seat_number;
 	@Column(name="reservation_exist")
 	String reservation_exist;
+	@Column(name="theater_id")
+	String theater_id;
 	
 	public int getNo() {
 		return no;
@@ -60,5 +60,11 @@ public class SeatVO {
 	}
 	public void setReservation_exist(String reservation_exist) {
 		this.reservation_exist = reservation_exist;
+	}
+	public String getTheater_id() {
+		return theater_id;
+	}
+	public void setTheater_id(String theater_id) {
+		this.theater_id = theater_id;
 	}	
 }

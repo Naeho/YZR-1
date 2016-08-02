@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import net.nigne.yzrproject.domain.EmpVO;
 import net.nigne.yzrproject.domain.MovieVO;
@@ -210,6 +211,52 @@ public class ReservationController {
 			entity = new ResponseEntity<>(map, HttpStatus.OK);
 			
 		} catch(Exception e){
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	@RequestMapping(value = "/main/{theaterId}/{plexNum}/seat", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> SeatPage(
+			@PathVariable("theaterId") String theaterId,
+			@PathVariable("plexNum") String plexNum,
+			@RequestParam(value="seat1",required=false) String seat1,
+			@RequestParam(value="seat2",required=false) String seat2,
+			@RequestParam(value="seat3",required=false) String seat3,
+			@RequestParam(value="seat4",required=false) String seat4,
+			@RequestParam(value="seat5",required=false) String seat5,
+			@RequestParam(value="seat6",required=false) String seat6,
+			@RequestParam(value="seat7",required=false) String seat7,
+			@RequestParam(value="seat8",required=false) String seat8
+			) {
+
+		
+		ResponseEntity<Map<String, Object>> entity = null;
+		
+		try{
+			List<Integer> getPrimary = seatService.getPrimary(theaterId, plexNum, seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8);
+			
+			int SeatNo = 0;
+			String SeatIndex = "";
+			int SeatNumber = 0;
+			
+			for(int i = 0; i < getPrimary.size(); i++){
+				SeatNo = getPrimary.get(i);
+				seatService.updateReservation(SeatNo);
+			}
+
+			List<SeatVO> list = seatService.getList(plexNum);
+			List<SeatVO> getIndex = seatService.getIndex(plexNum);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("l", list);
+			map.put("i", getIndex);
+			
+			entity = new ResponseEntity<>(map, HttpStatus.OK);
+			
+		} catch(Exception e){
+			
 			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
